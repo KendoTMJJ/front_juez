@@ -76,6 +76,7 @@ function ProblemDetailPage() {
       <div className="p-6">
         <div className="flex justify-between items-center mb-4">
           <h1 className="text-2xl font-bold text-gray-900">{problem.title}</h1>
+
           <div className="flex space-x-2">
             <Link
               to={`/problems/edit/${id}`}
@@ -125,23 +126,26 @@ function ProblemDetailPage() {
           <p className="text-gray-700">{problem.description}</p>
         </div>
 
-        <div className="mb-6">
-          <h2 className="text-lg font-semibold mb-2">Formato de entrada</h2>
-          <p className="text-gray-700">{problem.inputFormat}</p>
-        </div>
+        <div className="grid md:grid-cols-2 gap-4 mb-6">
+          <div>
+            <h2 className="text-lg font-semibold mb-2">Formato de entrada</h2>
+            <p className="text-gray-700">{problem.inputFormat}</p>
+          </div>
+          <div>
+            <h2 className="text-lg font-semibold mb-2">Formato de salida</h2>
+            <p className="text-gray-700">{problem.outputFormat}</p>
+          </div>
 
-        <div className="mb-6">
-          <h2 className="text-lg font-semibold mb-2">Formato de salida</h2>
-          <p className="text-gray-700">{problem.outputFormat}</p>
-        </div>
-
-        <div className="mb-6">
-          <h2 className="text-lg font-semibold mb-2">Restricciones</h2>
-          <ul className="list-disc pl-5 text-gray-700">
-            {problem.constraints.map((constraint, index) => (
-              <li key={index}>{constraint}</li>
-            ))}
-          </ul>
+          <div>
+            <h2 className="text-lg font-semibold mb-2">Restricciones</h2>
+            <p className="text-gray-700">
+              <ul className="list-disc pl-5">
+                {problem.constraints.map((constraint, index) => (
+                  <li key={index}>{constraint}</li>
+                ))}
+              </ul>
+            </p>
+          </div>
         </div>
 
         {problem.testCases && problem.testCases.some((tc) => tc.isSample) && (
@@ -170,13 +174,10 @@ function ProblemDetailPage() {
           </div>
         )}
 
-        <div className="mt-8">
-          <Link
-            to={`/problems/${id}/submit`}
-            className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg transition-colors"
-          >
-            Resolver este problema
-          </Link>
+        <div>
+          <button className="text-white">
+            <Link to={`/problems/${id}/submit`}>Resolver este problema</Link>
+          </button>
         </div>
       </div>
     </div>
