@@ -83,7 +83,8 @@ function SubmissionDetailPage() {
       <div className="p-6">
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-2xl font-bold text-gray-900">
-            Envío: {submission.codSubmission.substring(0, 8)}...
+            {/* Envío: {submission.codSubmission.substring(0, 8)}... */}
+            Envío
           </h1>
           {getStatusBadge(submission.status)}
         </div>

@@ -125,7 +125,7 @@ function SubmissionListPage() {
                       to={`/submissions/${submission.codSubmission}`}
                       className="text-blue-600 hover:text-blue-900"
                     >
-                      {submission.codSubmission.substring(0, 8)}...
+                      Solución
                     </Link>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
