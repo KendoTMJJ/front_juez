@@ -1,14 +1,30 @@
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { Code, FileText, Menu, User, X } from "lucide-react";
+"use client"
+
+import { useState } from "react"
+import { Link, useNavigate } from "react-router-dom"
+import { Code, FileText, Menu, User, X, LogOut } from "lucide-react"
+
+// Importar la función logout
+// Si tienes un archivo authService.js, usa esta importación:
+// import { logout } from "../services/authService";
+
+// Si no tienes el archivo, añade esta función dentro del componente:
+const logout = () => {
+  localStorage.removeItem("authToken")
+  localStorage.removeItem("userData")
+  window.location.href = "/"
+}
 
 export function Navbar() {
-  const navigate = useNavigate();
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const navigate = useNavigate()
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
 
   const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
-  };
+    setIsMenuOpen(!isMenuOpen)
+  }
+
+  // Verificar si el usuario está autenticado
+  const isAuthenticated = !!localStorage.getItem("authToken")
 
   return (
     <nav className="bg-white shadow-md">
@@ -16,10 +32,7 @@ export function Navbar() {
         <div className="flex justify-between h-16">
           {/* Logo y nombre */}
           <div className="flex items-center">
-            <div
-              className="flex-shrink-0 flex items-center cursor-pointer"
-              onClick={() => navigate("/")}
-            >
+            <div className="flex-shrink-0 flex items-center cursor-pointer" onClick={() => navigate("/")}>
               <span className="text-2xl font-semibold text-gray-900">Juez</span>
               <span className="text-2xl font-bold text-blue-600">Virtual</span>
             </div>
@@ -64,13 +77,35 @@ export function Navbar() {
               >
                 <FileText className="h-6 w-6" />
               </button>
-              <button
-                onClick={() => navigate("/auth/login")}
-                className="p-1 rounded-full text-gray-500 hover:text-gray-700 focus:outline-none"
-                title="Mi perfil"
-              >
-                <User className="h-6 w-6" />
-              </button>
+
+              {isAuthenticated ? (
+                <>
+                  <button
+                    onClick={() => navigate("/")}
+                    className="p-1 rounded-full text-gray-500 hover:text-gray-700 focus:outline-none"
+                    title="Mi perfil"
+                  >
+                    <User className="h-6 w-6" />
+                  </button>
+                  <button
+                    onClick={logout}
+                    style={{ backgroundColor: '#dc2626', color: 'white' }}
+                    className="flex items-center px-4 py-2 rounded-md hover:bg-red-700 transition-colors"
+                    title="Cerrar sesión"
+                  >
+                    <LogOut className="h-4 w-4 mr-1" />
+                    <span>Salir</span>
+                  </button>
+                </>
+              ) : (
+                <button
+                  onClick={() => navigate("/login")}
+                  className="p-1 rounded-full text-gray-500 hover:text-gray-700 focus:outline-none"
+                  title="Iniciar sesión"
+                >
+                  <User className="h-6 w-6" />
+                </button>
+              )}
             </div>
 
             {/* Menú móvil */}
@@ -79,11 +114,7 @@ export function Navbar() {
                 onClick={toggleMenu}
                 className="p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:outline-none"
               >
-                {isMenuOpen ? (
-                  <X className="h-6 w-6" />
-                ) : (
-                  <Menu className="h-6 w-6" />
-                )}
+                {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
               </button>
             </div>
           </div>
@@ -115,19 +146,37 @@ export function Navbar() {
             >
               Clasificación
             </Link>
-            <Link
-              to="/auth/login"
-              className="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300"
-              onClick={toggleMenu}
-            >
-              <div></div>
-              Iniciar sesión
-            </Link>
+
+            {isAuthenticated ? (
+              <>
+                <Link
+                  to="/profile"
+                  className="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300"
+                  onClick={toggleMenu}
+                >
+                  Mi perfil
+                </Link>
+                <button
+                  onClick={logout}
+                  className="block w-full text-left pl-3 pr-4 py-2 border-l-4 border-red-500 text-base font-medium text-red-600 bg-red-50 hover:bg-red-100 hover:text-red-700"
+                >
+                  Cerrar sesión
+                </button>
+              </>
+            ) : (
+              <Link
+                to="/login"
+                className="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300"
+                onClick={toggleMenu}
+              >
+                Iniciar sesión
+              </Link>
+            )}
           </div>
         </div>
       )}
     </nav>
-  );
+  )
 }
 
-export default Navbar;
+export default Navbar

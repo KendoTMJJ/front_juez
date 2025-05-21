@@ -12,6 +12,10 @@ export function SubmissionForm({ problem, onSubmit }) {
     { id: "javascript", name: "JavaScript" },
     { id: "java", name: "Java" },
     { id: "cpp", name: "C++" },
+    { id: "ruby", name: "ruby" },
+    { id: "go", name: "go" },
+    { id: "rust", name: "rust" },
+    { id: "TypeScript", name: "TypeScript" },
   ];
 
   const handleSubmit = async (e) => {
