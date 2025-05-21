@@ -9,6 +9,8 @@ import SubmissionDetailPage from "./pages/SubmissionDetailPage";
 import CreateProblemPage from "./pages/CreateProblemPage";
 import EditProblemPage from "./pages/EditProblemPage";
 import RankingsPage from "./pages/RankingsPage";
+import Login from "./pagesUsuarios/loginPage";
+import Register from "./pagesUsuarios/registerPage";
 
 function App() {
   return (
@@ -17,6 +19,8 @@ function App() {
       <main className="container mx-auto px-4 py-8">
         <Routes>
           <Route path="/" element={<HomePage />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
           <Route path="/problems" element={<ProblemListPage />} />
           <Route path="/problems/:id" element={<ProblemDetailPage />} />
           <Route path="/problems/create" element={<CreateProblemPage />} />
