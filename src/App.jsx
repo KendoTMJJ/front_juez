@@ -9,8 +9,8 @@ import SubmissionDetailPage from "./pages/SubmissionDetailPage";
 import CreateProblemPage from "./pages/CreateProblemPage";
 import EditProblemPage from "./pages/EditProblemPage";
 import RankingsPage from "./pages/RankingsPage";
-import Login from "./pagesUsuarios/loginPage";
-import Register from "./pagesUsuarios/registerPage";
+import Login from "./pagesUsers/loginPage";
+import Register from "./pagesUsers/registerPage";
 
 function App() {
   return (

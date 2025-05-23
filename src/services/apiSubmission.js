@@ -1,62 +1,132 @@
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+const BACKEND_URL = import.meta.env.VITE_JUEZ_URL;
+
+
+// Función auxiliar para obtener el token de autenticación
+const getAuthToken = () => {
+  return localStorage.getItem("authToken")
+}
+
+// Función auxiliar para crear headers con autenticación
+const getAuthHeaders = () => {
+  const token = getAuthToken()
+  return {
+    "Content-Type": "application/json",
+    Authorization: token ? `Bearer ${token}` : "",
+  }
+}
+
 
 // mostrar todos los submissions
-export async function fetchSubmissions() {
-    const response = await fetch(`${BACKEND_URL}/api/submissions/all`);
-    if (!response.ok) {
-        throw new Error("Problemas al obtener los datos");
-    }
-    return await response.json();
+export async function fetchSubmissions(idUser) {
+  const response = await fetch(`${BACKEND_URL}/api/submissions/all/${idUser}`);
+  if (!response.ok) {
+    throw new Error("Problemas al obtener los datos");
+  }
+  return await response.json();
 }
 
-// crear una Submission para un problema
+// Crear una nueva submission
+export async function createSubmission(submissionData) {
+  const response = await fetch(`${BACKEND_URL}/api/submissions/create`, {
+    method: "POST",
+    headers: getAuthHeaders(),
+    body: JSON.stringify(submissionData),
+  })
 
-export async function createSubmission(submission) {
-    const response = await fetch(`${BACKEND_URL}/api/submissions/create`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify(submission),
-    });
+  if (!response.ok) {
+    throw new Error("Problemas al crear la submission")
+  }
 
-    if (!response.ok) {
-        throw new Error("Problemas al enviar la solución");
-    }
-    return await response.json();
-
+  return await response.json()
 }
 
-// Función mock para simular la API
-export async function fetchUserSubmissions(userId) {
-  // Simulamos un retraso de red
-  await new Promise(resolve => setTimeout(resolve, 800));
-  
-  // Datos mock para pruebas
-  const mockSubmissions = [
-    {
-      id: "1",
-      problemTitle: "Suma de dos números",
-      status: "Aceptado",
-      createdAt: "2023-05-15T10:30:00Z",
-      language: "JavaScript"
-    },
-    {
-      id: "2",
-      problemTitle: "Fibonacci",
-      status: "Rechazado",
-      createdAt: "2023-05-10T14:45:00Z",
-      language: "Python"
-    },
-    {
-      id: "3",
-      problemTitle: "Palíndromos",
-      status: "En Proceso",
-      createdAt: "2023-05-05T09:15:00Z",
-      language: "Java"
-    }
-  ];
+// Obtener todas las submissions, con filtros opcionales
+export async function getAllSubmissions({ problemId, userId } = {}) {
+  let url = `${BACKEND_URL}/api/submissions/all`;
 
-  // Filtramos por el ID quemado (aunque en este mock todos son del mismo usuario)
-  return mockSubmissions.filter(sub => sub.userId === userId || true);
+  const params = new URLSearchParams();
+  if (problemId) params.append("problemId", problemId);
+  if (userId) params.append("userId", userId);
+
+  if ([...params].length > 0) {
+    url += `?${params.toString()}`;
+  }
+
+  const response = await fetch(url, {
+    headers: getAuthHeaders(),
+  });
+
+  if (!response.ok) {
+    throw new Error("Problemas al obtener las submissions");
+  }
+
+  return await response.json();
+}
+
+
+// Obtener una submission por ID
+export async function getSubmissionById(submissionId) {
+  const response = await fetch(`${BACKEND_URL}/api/submissions/findOne/${submissionId}`, {
+    headers: getAuthHeaders(),
+  })
+
+  if (!response.ok) {
+    throw new Error(`Submission no encontrada con ID: ${submissionId}`)
+  }
+
+  return await response.json()
+}
+
+// Obtener submissions del usuario actual
+export async function getUserSubmissions() {
+  const response = await fetch(`${BACKEND_URL}/api/submissions/user`, {
+    headers: getAuthHeaders(),
+  })
+
+  if (!response.ok) {
+    throw new Error("Problemas al obtener las submissions del usuario")
+  }
+
+  return await response.json()
+}
+
+
+// Obtener submissions de un usuario específico (solo para admin y maestros)
+export async function getUserSubmissionsById(userId) {
+  const response = await fetch(`${BACKEND_URL}/api/submissions/user/${userId}`, {
+    headers: getAuthHeaders(),
+  })
+
+  if (!response.ok) {
+    throw new Error(`Problemas al obtener las submissions del usuario con ID: ${userId}`)
+  }
+
+  return await response.json()
+}
+
+
+// Obtener submissions por problema
+export async function getSubmissionsByProblem(problemId) {
+  const response = await fetch(`${BACKEND_URL}/api/submissions/problem/${problemId}`, {
+    headers: getAuthHeaders(),
+  })
+
+  if (!response.ok) {
+    throw new Error(`Problemas al obtener las submissions del problema con ID: ${problemId}`)
+  }
+
+  return await response.json()
+}
+
+// Obtener submissions por estado
+export async function getSubmissionsByStatus(status) {
+  const response = await fetch(`${BACKEND_URL}/api/submissions/status/${status}`, {
+    headers: getAuthHeaders(),
+  })
+
+  if (!response.ok) {
+    throw new Error(`Problemas al obtener las submissions con estado: ${status}`)
+  }
+
+  return await response.json()
 }

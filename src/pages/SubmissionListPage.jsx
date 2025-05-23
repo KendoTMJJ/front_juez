@@ -1,17 +1,17 @@
-"use client";
-
 import { useState, useEffect } from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import axios from "axios";
+import { getAllSubmissions } from "../services/apiSubmission";
 
 function SubmissionListPage() {
   const [searchParams] = useSearchParams();
   const problemId = searchParams.get("problemId");
-  const userId = searchParams.get("userId");
+  // const userId = searchParams.get("userId");
 
   const [submissions, setSubmissions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  const userId = localStorage.getItem("idUser");
 
   useEffect(() => {
     fetchSubmissions();
@@ -20,16 +20,8 @@ function SubmissionListPage() {
   const fetchSubmissions = async () => {
     try {
       setLoading(true);
-      let url = "http://localhost:3213/api/submissions/all";
-
-      if (problemId) {
-        url += `?problemId=${problemId}`;
-      } else if (userId) {
-        url += `?userId=${userId}`;
-      }
-
-      const response = await axios.get(url);
-      setSubmissions(response.data);
+      const data = await getAllSubmissions({ problemId, userId });
+      setSubmissions(data);
       setError(null);
     } catch (err) {
       console.error("Error fetching submissions:", err);

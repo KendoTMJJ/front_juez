@@ -1,30 +1,20 @@
-"use client"
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { Code, FileText, Menu, User, X, LogOut } from "lucide-react";
+import { logout } from "../servicesUsuarios/authService";
 
-import { useState } from "react"
-import { Link, useNavigate } from "react-router-dom"
-import { Code, FileText, Menu, User, X, LogOut } from "lucide-react"
-
-// Importar la función logout
-// Si tienes un archivo authService.js, usa esta importación:
-// import { logout } from "../services/authService";
-
-// Si no tienes el archivo, añade esta función dentro del componente:
-const logout = () => {
-  localStorage.removeItem("authToken")
-  localStorage.removeItem("userData")
-  window.location.href = "/"
-}
+const userId = localStorage.getItem("idUser");
 
 export function Navbar() {
-  const navigate = useNavigate()
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const navigate = useNavigate();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen)
-  }
+    setIsMenuOpen(!isMenuOpen);
+  };
 
   // Verificar si el usuario está autenticado
-  const isAuthenticated = !!localStorage.getItem("authToken")
+  const isAuthenticated = !!localStorage.getItem("authToken");
 
   return (
     <nav className="bg-white shadow-md">
@@ -32,7 +22,10 @@ export function Navbar() {
         <div className="flex justify-between h-16">
           {/* Logo y nombre */}
           <div className="flex items-center">
-            <div className="flex-shrink-0 flex items-center cursor-pointer" onClick={() => navigate("/")}>
+            <div
+              className="flex-shrink-0 flex items-center cursor-pointer"
+              onClick={() => navigate("/")}
+            >
               <span className="text-2xl font-semibold text-gray-900">Juez</span>
               <span className="text-2xl font-bold text-blue-600">Virtual</span>
             </div>
@@ -46,7 +39,7 @@ export function Navbar() {
                 Problemas
               </Link>
               <Link
-                to="/submissions"
+                to={`/submissions?userId=${userId}`}
                 className="inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300"
               >
                 Envíos
@@ -71,7 +64,7 @@ export function Navbar() {
                 <Code className="h-6 w-6" />
               </button>
               <button
-                onClick={() => navigate("/submissions")}
+                onClick={() => navigate(`/submissions?userId=${userId}`)}
                 className="p-1 rounded-full text-gray-500 hover:text-gray-700 focus:outline-none"
                 title="Mis envíos"
               >
@@ -89,7 +82,7 @@ export function Navbar() {
                   </button>
                   <button
                     onClick={logout}
-                    style={{ backgroundColor: '#dc2626', color: 'white' }}
+                    style={{ backgroundColor: "#dc2626", color: "white" }}
                     className="flex items-center px-4 py-2 rounded-md hover:bg-red-700 transition-colors"
                     title="Cerrar sesión"
                   >
@@ -114,7 +107,11 @@ export function Navbar() {
                 onClick={toggleMenu}
                 className="p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:outline-none"
               >
-                {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+                {isMenuOpen ? (
+                  <X className="h-6 w-6" />
+                ) : (
+                  <Menu className="h-6 w-6" />
+                )}
               </button>
             </div>
           </div>
@@ -133,7 +130,7 @@ export function Navbar() {
               Problemas
             </Link>
             <Link
-              to="/submissions"
+              to={`/submissions?userId=${userId}`}
               className="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300"
               onClick={toggleMenu}
             >
@@ -176,7 +173,7 @@ export function Navbar() {
         </div>
       )}
     </nav>
-  )
+  );
 }
 
-export default Navbar
+export default Navbar;

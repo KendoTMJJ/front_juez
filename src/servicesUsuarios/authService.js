@@ -1,4 +1,4 @@
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL
+const BACKEND_URL = import.meta.env.VITE_USERS_URL;
 
 // Función para registrar un nuevo usuario
 export async function registerUser(userData) {
@@ -84,6 +84,8 @@ export async function loginUser(credentials) {
 
     // Examina la estructura de la respuesta para depuración
     console.log("Estructura de data:", JSON.stringify(data, null, 2))
+    console.log("uuui de usuario:", JSON.stringify(data.user.codUser, null, 2))
+    localStorage.setItem("idUser", data.user.codUser)
 
     // Estrategia 1: Buscar un token en cualquier nivel de la respuesta
     function findTokenInObject(obj, tokenNames = ["accessToken", "tokenApp", "token"]) {
@@ -160,6 +162,7 @@ export function getAuthToken() {
 export function logout() {
   localStorage.removeItem("authToken")
   localStorage.removeItem("userData")
+  localStorage.removeItem("idUser")
   window.location.href = "/"
 }
 
