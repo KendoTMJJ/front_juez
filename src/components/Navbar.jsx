@@ -3,9 +3,10 @@ import { Link, useNavigate } from "react-router-dom";
 import { Code, FileText, Menu, User, X, LogOut } from "lucide-react";
 import { logout } from "../servicesUsuarios/authService";
 
-const userId = localStorage.getItem("idUser");
-
 export function Navbar() {
+  const userData = JSON.parse(localStorage.getItem("userData"));
+  const userId = userData?.codUser;
+
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -38,12 +39,14 @@ export function Navbar() {
               >
                 Problemas
               </Link>
-              <Link
-                to={`/submissions?userId=${userId}`}
-                className="inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300"
-              >
-                Envíos
-              </Link>
+              {isAuthenticated && (
+                <Link
+                  to={`/submissions?userId=${userId}`}
+                  className="inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                >
+                  Mis Envíos
+                </Link>
+              )}
               <Link
                 to="/rankings"
                 className="inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300"
@@ -63,18 +66,20 @@ export function Navbar() {
               >
                 <Code className="h-6 w-6" />
               </button>
-              <button
-                onClick={() => navigate(`/submissions?userId=${userId}`)}
-                className="p-1 rounded-full text-gray-500 hover:text-gray-700 focus:outline-none"
-                title="Mis envíos"
-              >
-                <FileText className="h-6 w-6" />
-              </button>
+              {isAuthenticated && (
+                <button
+                  onClick={() => navigate(`/submissions?userId=${userId}`)}
+                  className="p-1 rounded-full text-gray-500 hover:text-gray-700 focus:outline-none"
+                  title="Mis envíos"
+                >
+                  <FileText className="h-6 w-6" />
+                </button>
+              )}
 
               {isAuthenticated ? (
                 <>
                   <button
-                    onClick={() => navigate("/")}
+                    onClick={() => navigate("/profile")}
                     className="p-1 rounded-full text-gray-500 hover:text-gray-700 focus:outline-none"
                     title="Mi perfil"
                   >
@@ -129,13 +134,17 @@ export function Navbar() {
             >
               Problemas
             </Link>
-            <Link
-              to={`/submissions?userId=${userId}`}
-              className="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300"
-              onClick={toggleMenu}
-            >
-              Envíos
-            </Link>
+
+            {isAuthenticated && (
+              <Link
+                to={`/submissions?userId=${userId}`}
+                className="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300"
+                onClick={toggleMenu}
+              >
+                Envíos
+              </Link>
+            )}
+
             <Link
               to="/rankings"
               className="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300"

@@ -182,3 +182,4 @@ export function getUserRole() {
   const user = getCurrentUser()
   return user?.rolUsuario?.name || "Usuario"
 }
+

@@ -1,15 +1,18 @@
-import { Link } from "react-router-dom"
-import { useState, useEffect } from "react"
-import { getCurrentUser } from "../servicesUsuarios/authService"
+import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { getCurrentUser } from "../servicesUsuarios/authService";
 
 function HomePage() {
-  const [username, setUsername] = useState("")
+  const [username, setUsername] = useState("");
 
   useEffect(() => {
     // Obtener el nombre de usuario al cargar el componente
-    const user = getCurrentUser()
-    setUsername(user?.username || "")
-  }, [])
+    const user = getCurrentUser();
+    setUsername(user?.username || "");
+  }, []);
+
+  const isAuthenticated = !!localStorage.getItem("authToken");
+
   return (
     <div className="text-center">
       <h1 className="text-4xl font-bold text-gray-900 mt-10 mb-6">

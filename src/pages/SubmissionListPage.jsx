@@ -3,19 +3,20 @@ import { Link, useSearchParams } from "react-router-dom";
 import { getAllSubmissions } from "../services/apiSubmission";
 
 function SubmissionListPage() {
+  const userData = JSON.parse(localStorage.getItem("userData"));
+  const userId = userData?.codUser;
+
   const [searchParams] = useSearchParams();
   const problemId = searchParams.get("problemId");
-  // const userId = searchParams.get("userId");
 
   const [submissions, setSubmissions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const userId = localStorage.getItem("idUser");
-
   useEffect(() => {
+    if (!userId) return; // No hay usuario autenticado
     fetchSubmissions();
-  }, [problemId, userId]);
+  }, [userId]);
 
   const fetchSubmissions = async () => {
     try {

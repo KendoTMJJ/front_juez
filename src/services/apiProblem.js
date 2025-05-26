@@ -73,18 +73,28 @@ export async function updateProblem(id, problem) {
     return await response.json()
   }
 
-// Eliminar un problema
-export async function deleteProblem(id) {
+  export async function deleteProblem(id) {
     const response = await fetch(`${BACKEND_URL}/api/problems/${id}`, {
       method: "DELETE",
       headers: getAuthHeaders(),
-    })
+    });
   
     if (!response.ok) {
-      throw new Error(`Problemas al eliminar el problema con ID: ${id}`)
+      throw new Error(`Problemas al eliminar el problema con ID: ${id}`);
     }
   
-    return await response.json()
+    // Si no hay contenido (204), no intentes hacer .json()
+    if (response.status === 204) {
+      return null;
+    }
+  
+    // Si sí hay contenido, parsea como JSON
+    const contentType = response.headers.get("content-type");
+    if (contentType && contentType.includes("application/json")) {
+      return await response.json();
+    }
+  
+    return null;
   }
 
 // Obtener problemas por dificultad

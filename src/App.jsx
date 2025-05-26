@@ -11,6 +11,7 @@ import EditProblemPage from "./pages/EditProblemPage";
 import RankingsPage from "./pages/RankingsPage";
 import Login from "./pagesUsers/loginPage";
 import Register from "./pagesUsers/registerPage";
+import ProfilePage from "./pagesUsers/profilePage";
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/profile" element={<ProfilePage />} />
           <Route path="/problems" element={<ProblemListPage />} />
           <Route path="/problems/:id" element={<ProblemDetailPage />} />
           <Route path="/problems/create" element={<CreateProblemPage />} />

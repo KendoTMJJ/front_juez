@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
-import axios from "axios";
+import { deleteProblem, findProbleById } from "../services/apiProblem";
 
 function ProblemDetailPage() {
   const { id } = useParams();
@@ -16,10 +16,8 @@ function ProblemDetailPage() {
   const fetchProblem = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(
-        `http://localhost:3213/api/problems/findOne/${id}`
-      );
-      setProblem(response.data);
+      const data = await findProbleById(id);
+      setProblem(data);
       setError(null);
     } catch (err) {
       console.error("Error fetching problem:", err);
@@ -36,7 +34,7 @@ function ProblemDetailPage() {
       window.confirm("¿Estás seguro de que quieres eliminar este problema?")
     ) {
       try {
-        await axios.delete(`http://localhost:3213/api/problems/${id}`);
+        await deleteProblem(id);
         navigate("/problems");
       } catch (err) {
         console.error("Error deleting problem:", err);
@@ -136,15 +134,12 @@ function ProblemDetailPage() {
             <p className="text-gray-700">{problem.outputFormat}</p>
           </div>
 
-          <div>
-            <h2 className="text-lg font-semibold mb-2">Restricciones</h2>
-            <p className="text-gray-700">
-              <ul className="list-disc pl-5">
-                {problem.constraints.map((constraint, index) => (
-                  <li key={index}>{constraint}</li>
-                ))}
-              </ul>
-            </p>
+          <div className="text-gray-700">
+            <ul className="list-disc pl-5">
+              {problem.constraints.map((constraint, index) => (
+                <li key={index}>{constraint}</li>
+              ))}
+            </ul>
           </div>
         </div>
 
