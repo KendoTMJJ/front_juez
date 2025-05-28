@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { deleteProblem, findProbleById } from "../services/apiProblem";
+import { isAdmin } from "../servicesUsuarios/authService";
 
 function ProblemDetailPage() {
   const { id } = useParams();
@@ -8,6 +9,8 @@ function ProblemDetailPage() {
   const [problem, setProblem] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  const isAuthenticated = !!localStorage.getItem("authToken");
 
   useEffect(() => {
     fetchProblem();
@@ -75,20 +78,22 @@ function ProblemDetailPage() {
         <div className="flex justify-between items-center mb-4">
           <h1 className="text-2xl font-bold text-gray-900">{problem.title}</h1>
 
-          <div className="flex space-x-2">
-            <Link
-              to={`/problems/edit/${id}`}
-              className="bg-gray-600 hover:bg-gray-700 text-white text-sm font-medium py-2 px-4 rounded"
-            >
-              Editar
-            </Link>
-            <button
-              onClick={handleDelete}
-              className="bg-red-600 hover:bg-red-700 text-white text-sm font-medium py-2 px-4 rounded"
-            >
-              Eliminar
-            </button>
-          </div>
+          {isAuthenticated && isAdmin() && (
+            <div className="flex space-x-2">
+              <Link
+                to={`/problems/edit/${id}`}
+                className="bg-gray-600 hover:bg-gray-700 text-white text-sm font-medium py-2 px-4 rounded"
+              >
+                Editar
+              </Link>
+              <button
+                onClick={handleDelete}
+                className="bg-red-600 hover:bg-red-700 text-white text-sm font-medium py-2 px-4 rounded"
+              >
+                Eliminar
+              </button>
+            </div>
+          )}
         </div>
 
         <div className="flex flex-wrap gap-2 mb-4">
@@ -170,9 +175,11 @@ function ProblemDetailPage() {
         )}
 
         <div>
-          <button className="text-white">
-            <Link to={`/problems/${id}/submit`}>Resolver este problema</Link>
-          </button>
+          {isAuthenticated && (
+            <button className="text-white">
+              <Link to={`/problems/${id}/submit`}>Resolver este problema</Link>
+            </button>
+          )}
         </div>
       </div>
     </div>

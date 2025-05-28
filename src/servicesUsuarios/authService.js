@@ -183,3 +183,9 @@ export function getUserRole() {
   return user?.rolUsuario?.name || "Usuario"
 }
 
+
+// Función para verificar si el usuario es administrador
+export function isAdmin() {
+  const role = getUserRole();
+  return role === "Administrador"; // Compara con el nombre exacto de tu JSON
+}

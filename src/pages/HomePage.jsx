@@ -31,12 +31,14 @@ function HomePage() {
         >
           Ver Problemas
         </Link>
-        <Link
-          to="/submissions"
-          className="bg-gray-600 hover:bg-blue-700  text-white font-bold py-3 px-6 rounded-lg transition-colors"
-        >
-          Ver Envíos
-        </Link>
+        {isAuthenticated && (
+          <Link
+            to="/submissions"
+            className="bg-gray-600 hover:bg-blue-700  text-white font-bold py-3 px-6 rounded-lg transition-colors"
+          >
+            Ver Envíos
+          </Link>
+        )}
       </div>
     </div>
   );
