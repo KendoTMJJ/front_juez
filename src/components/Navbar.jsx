@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Code, FileText, Menu, User, X, LogOut } from "lucide-react";
+import { Code, FileText, Menu, User, X, LogOut, Settings } from "lucide-react";
 import { logout } from "../servicesUsuarios/authService";
 
 export function Navbar() {
@@ -78,6 +78,16 @@ export function Navbar() {
 
               {isAuthenticated ? (
                 <>
+
+                {/* Botón de Admin - Visible para todos los usuarios autenticados */}
+                  <button
+                    onClick={() => navigate("/admin")}
+                    className="flex items-center px-3 py-2 rounded-md text-white bg-red-600 hover:bg-red-700 transition-colors"
+                    title="Panel de Administración"
+                  >
+                    <Settings className="h-4 w-4 mr-1" />
+                    <span className="text-sm font-medium">Admin</span>
+                  </button>
                   <button
                     onClick={() => navigate("/profile")}
                     className="p-1 rounded-full text-gray-500 hover:text-gray-700 focus:outline-none"
@@ -155,6 +165,16 @@ export function Navbar() {
 
             {isAuthenticated ? (
               <>
+
+              {/* Botón de Admin en móvil - Visible para todos los usuarios autenticados */}
+                <Link
+                  to="/admin"
+                  className="block pl-3 pr-4 py-2 border-l-4 border-red-500 text-base font-medium text-red-600 bg-red-50 hover:bg-red-100 hover:text-red-700"
+                  onClick={toggleMenu}
+                >
+                  Panel de Administración
+                </Link>
+
                 <Link
                   to="/profile"
                   className="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300"
