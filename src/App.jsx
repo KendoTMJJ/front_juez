@@ -12,6 +12,8 @@ import RankingsPage from "./pages/RankingsPage";
 import Login from "./pagesUsers/loginPage";
 import Register from "./pagesUsers/registerPage";
 import ProfilePage from "./pagesUsers/profilePage";
+import AdminPage from "./pagesUsers/adminPage";
+import Footer from "./components/Footer";
 
 function App() {
   return (
