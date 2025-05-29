@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { Link } from "react-router-dom";
 import { fetchProblems } from "../services/apiProblem";
+import { isAdmin } from "../servicesUsuarios/authService";
 
 function ProblemListPage() {
   const [problems, setProblems] = useState([]);
@@ -28,7 +29,7 @@ function ProblemListPage() {
     <div className="max-w-6xl mx-auto">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold text-gray-900">Problemas</h1>
-        {isAuthenticated && (
+        {isAuthenticated && isAdmin() && (
           <Link
             to="/problems/create"
             className="bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium py-2 px-4 rounded"
@@ -118,7 +119,7 @@ function ProblemListPage() {
                         </Link>
                       )}
 
-                      {isAuthenticated && (
+                      {isAuthenticated && isAdmin() && (
                         <Link
                           to={`/problems/edit/${problem.codProblem}`}
                           className="text-gray-600 hover:text -gray-900"

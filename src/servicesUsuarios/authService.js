@@ -160,9 +160,11 @@ export function getAuthToken() {
 
 // Función para cerrar sesión
 export function logout() {
-  localStorage.removeItem("authToken")
-  localStorage.removeItem("userData")
-  localStorage.removeItem("idUser")
+
+  localStorage.clear();
+  // localStorage.removeItem("authToken")
+  // localStorage.removeItem("userData")
+  // localStorage.removeItem("idUser")
   window.location.href = "/"
 }
 

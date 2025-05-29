@@ -12,6 +12,7 @@ import RankingsPage from "./pages/RankingsPage";
 import Login from "./pagesUsers/loginPage";
 import Register from "./pagesUsers/registerPage";
 import ProfilePage from "./pagesUsers/profilePage";
+import Footer from "./components/Footer";
 
 function App() {
   return (
@@ -33,6 +34,7 @@ function App() {
           <Route path="/rankings" element={<RankingsPage />} />
         </Routes>
       </main>
+      <Footer />
     </div>
   );
 }

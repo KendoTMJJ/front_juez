@@ -85,14 +85,14 @@ export function Navbar() {
                   >
                     <User className="h-6 w-6" />
                   </button>
+
                   <button
                     onClick={logout}
-                    style={{ backgroundColor: "#dc2626", color: "white" }}
-                    className="flex items-center px-4 py-2 rounded-md hover:bg-red-700 transition-colors"
+                    style={{ backgroundColor: "#dc2626" }}
+                    className="p-1 rounded-full text-gray-500 hover:text-gray-700 focus:outline-none"
                     title="Cerrar sesión"
                   >
-                    <LogOut className="h-4 w-4 mr-1" />
-                    <span>Salir</span>
+                    <LogOut className="h-6 w-6" />
                   </button>
                 </>
               ) : (
