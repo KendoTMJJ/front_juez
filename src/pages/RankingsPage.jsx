@@ -44,7 +44,7 @@ function RankingsPage() {
   }, []);
 
   return (
-    <div className="max-w-6xl mx-auto">
+    <div className="max-w-7xl mx-auto p-6 space-y-6">
       <h1 className="text-3xl font-bold mb-6">Clasificación</h1>
       <p className="text-lg mb-8">
         Los mejores programadores basados en problemas resueltos y puntuación

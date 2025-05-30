@@ -1,6 +1,15 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Code, FileText, Menu, User, X, LogOut, Settings } from "lucide-react";
+import {
+  Code,
+  FileText,
+  Menu,
+  User,
+  X,
+  LogOut,
+  Settings,
+  UserRoundCog,
+} from "lucide-react";
 import { isAdmin, logout } from "../servicesUsuarios/authService";
 
 export function Navbar() {
@@ -14,14 +23,14 @@ export function Navbar() {
     setIsMenuOpen(!isMenuOpen);
   };
 
-  // Verificar si el usuario está autenticado
+  // Check if user is authenticated
   const isAuthenticated = !!localStorage.getItem("authToken");
 
   return (
     <nav className="bg-white shadow-md">
       <div className="max-w-7xl mx-auto px-4">
         <div className="flex justify-between h-16">
-          {/* Logo y nombre */}
+          {/* Logo and name */}
           <div className="flex items-center">
             <div
               className="flex-shrink-0 flex items-center cursor-pointer"
@@ -31,38 +40,38 @@ export function Navbar() {
               <span className="text-2xl font-bold text-blue-600">Virtual</span>
             </div>
 
-            {/* Navegación de escritorio */}
+            {/* Desktop navigation */}
             <div className="hidden md:ml-6 md:flex md:space-x-8">
               <Link
                 to="/problems"
                 className="inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300"
               >
-                Problemas
+                Problems
               </Link>
               {isAuthenticated && (
                 <Link
                   to={`/submissions?userId=${userId}`}
                   className="inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300"
                 >
-                  Mis Envíos
+                  My Submissions
                 </Link>
               )}
               <Link
                 to="/rankings"
                 className="inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300"
               >
-                Clasificación
+                Rankings
               </Link>
             </div>
           </div>
 
-          {/* Botones de acción */}
+          {/* Action buttons */}
           <div className="flex items-center">
             <div className="hidden md:flex md:items-center md:space-x-4">
               <button
                 onClick={() => navigate("/problems")}
                 className="p-1 rounded-full text-gray-500 hover:text-gray-700 focus:outline-none"
-                title="Problemas"
+                title="Problems"
               >
                 <Code className="h-6 w-6" />
               </button>
@@ -70,7 +79,7 @@ export function Navbar() {
                 <button
                   onClick={() => navigate(`/submissions?userId=${userId}`)}
                   className="p-1 rounded-full text-gray-500 hover:text-gray-700 focus:outline-none"
-                  title="Mis envíos"
+                  title="My Submissions"
                 >
                   <FileText className="h-6 w-6" />
                 </button>
@@ -78,29 +87,30 @@ export function Navbar() {
 
               {isAuthenticated ? (
                 <>
-
-                {/* Botón de Admin - Visible para todos los usuarios autenticados */}
-                  {isAdmin() &&(<button
-                    onClick={() => navigate("/admin")}
-                    className="flex items-center px-3 py-2 rounded-md text-white bg-red-600 hover:bg-red-700 transition-colors"
-                    title="Panel de Administración"
-                  >
-                    <Settings className="h-4 w-4 mr-1" />
-                    <span className="text-sm font-medium">Admin</span>
-                  </button>)}
                   <button
                     onClick={() => navigate("/profile")}
                     className="p-1 rounded-full text-gray-500 hover:text-gray-700 focus:outline-none"
-                    title="Mi perfil"
+                    title="My Profile"
                   >
                     <User className="h-6 w-6" />
                   </button>
+
+                  {/* Admin button - Visible for all authenticated users */}
+                  {isAdmin() && (
+                    <button
+                      onClick={() => navigate("/admin")}
+                      className="flex items-center px-3 py-2 rounded-md text-white bg-red-600 hover:bg-red-700 transition-colors"
+                      title="Admin Panel"
+                    >
+                      <UserRoundCog className="h-6 w-6" />
+                    </button>
+                  )}
 
                   <button
                     onClick={logout}
                     style={{ backgroundColor: "#dc2626" }}
                     className="p-1 rounded-full text-gray-500 hover:text-gray-700 focus:outline-none"
-                    title="Cerrar sesión"
+                    title="Logout"
                   >
                     <LogOut className="h-6 w-6" />
                   </button>
@@ -109,14 +119,14 @@ export function Navbar() {
                 <button
                   onClick={() => navigate("/login")}
                   className="p-1 rounded-full text-gray-500 hover:text-gray-700 focus:outline-none"
-                  title="Iniciar sesión"
+                  title="Login"
                 >
                   <User className="h-6 w-6" />
                 </button>
               )}
             </div>
 
-            {/* Menú móvil */}
+            {/* Mobile menu */}
             <div className="md:hidden flex items-center">
               <button
                 onClick={toggleMenu}
@@ -133,7 +143,7 @@ export function Navbar() {
         </div>
       </div>
 
-      {/* Panel móvil */}
+      {/* Mobile panel */}
       {isMenuOpen && (
         <div className="md:hidden">
           <div className="pt-2 pb-3 space-y-1">
@@ -142,7 +152,7 @@ export function Navbar() {
               className="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300"
               onClick={toggleMenu}
             >
-              Problemas
+              Problems
             </Link>
 
             {isAuthenticated && (
@@ -151,7 +161,7 @@ export function Navbar() {
                 className="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300"
                 onClick={toggleMenu}
               >
-                Envíos
+                My Submissions
               </Link>
             )}
 
@@ -160,19 +170,18 @@ export function Navbar() {
               className="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300"
               onClick={toggleMenu}
             >
-              Clasificación
+              Rankings
             </Link>
 
             {isAuthenticated ? (
               <>
-
-              {/* Botón de Admin en móvil - Visible para todos los usuarios autenticados */}
+                {/* Admin button on mobile - Visible for all authenticated users */}
                 <Link
                   to="/admin"
                   className="block pl-3 pr-4 py-2 border-l-4 border-red-500 text-base font-medium text-red-600 bg-red-50 hover:bg-red-100 hover:text-red-700"
                   onClick={toggleMenu}
                 >
-                  Panel de Administración
+                  Admin Panel
                 </Link>
 
                 <Link
@@ -180,13 +189,13 @@ export function Navbar() {
                   className="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300"
                   onClick={toggleMenu}
                 >
-                  Mi perfil
+                  My Profile
                 </Link>
                 <button
                   onClick={logout}
                   className="block w-full text-left pl-3 pr-4 py-2 border-l-4 border-red-500 text-base font-medium text-red-600 bg-red-50 hover:bg-red-100 hover:text-red-700"
                 >
-                  Cerrar sesión
+                  Logout
                 </button>
               </>
             ) : (
@@ -195,7 +204,7 @@ export function Navbar() {
                 className="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300"
                 onClick={toggleMenu}
               >
-                Iniciar sesión
+                Login
               </Link>
             )}
           </div>

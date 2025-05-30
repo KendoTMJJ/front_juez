@@ -73,7 +73,7 @@ function ProblemDetailPage() {
   }
 
   return (
-    <div className="bg-white shadow-md rounded-lg overflow-hidden">
+    <div className="bg-white shadow-md rounded-lg overflow-hidden max-w-7xl mx-auto p-6 space-y-6">
       <div className="p-6">
         <div className="flex justify-between items-center mb-4">
           <h1 className="text-2xl font-bold text-gray-900">{problem.title}</h1>
