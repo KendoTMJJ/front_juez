@@ -19,36 +19,42 @@ const Login = () => {
     }));
   };
 
-const handleSubmit = async (e) => {
-  e.preventDefault();
-  setError("");
-  
-  try {
-    setLoading(true);
-    console.log("Enviando credenciales:", credentials);
-    
-    const result = await loginUser(credentials);
-    
-    console.log("Resultado del login:", result);
-    
-    if (result.success) {
-      // Login exitoso, redirigir al dashboard o página principal
-      navigate("/");
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
+
+    try {
+      setLoading(true);
+      console.log("Enviando credenciales:", credentials);
+
+      const result = await loginUser(credentials);
+
+      console.log("Resultado del login:", result);
+
+      if (result.success) {
+        // Login exitoso, redirigir al dashboard o página principal
+        navigate("/");
+      }
+    } catch (err) {
+      console.error("Error completo:", err);
+      setError(err.message || "Error al iniciar sesión. Inténtalo de nuevo.");
+    } finally {
+      setLoading(false);
     }
-  } catch (err) {
-    console.error("Error completo:", err);
-    setError(err.message || "Error al iniciar sesión. Inténtalo de nuevo.");
-  } finally {
-    setLoading(false);
-  }
-};
+  };
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-white">
       <div className="bg-slate-800 border border-slate-700 rounded-xl p-12 shadow-xl w-full max-w-2xl">
-        <h1 className="text-5xl font-extrabold text-center text-white mb-8">Inicia sesión</h1>
+        <h1 className="text-5xl font-extrabold text-center text-white mb-8">
+          Inicia sesión
+        </h1>
 
-        {error && <div className="bg-red-500 text-white p-3 rounded-lg mb-6">{error}</div>}
+        {error && (
+          <div className="bg-red-500 text-white p-3 rounded-lg mb-6">
+            {error}
+          </div>
+        )}
 
         <form className="space-y-8" onSubmit={handleSubmit}>
           {/* Campo de usuario */}
@@ -61,9 +67,7 @@ const handleSubmit = async (e) => {
               required
               className="w-full px-0 pb-3 pt-10 text-lg text-white bg-transparent border-0 border-b-2 border-gray-500 appearance-none focus:outline-none focus:border-blue-500 peer"
             />
-            <label
-              className="absolute text-lg text-gray-300 duration-300 transform scale-75 top-2.5 origin-[0] left-0 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-3 peer-focus:scale-75 peer-focus:-translate-y-1 peer-focus:text-blue-500"
-            >
+            <label className="absolute text-lg text-gray-300 duration-300 transform scale-75 top-2.5 origin-[0] left-0 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-3 peer-focus:scale-75 peer-focus:-translate-y-1 peer-focus:text-blue-500">
               Nombre de usuario
             </label>
           </div>
@@ -78,9 +82,7 @@ const handleSubmit = async (e) => {
               required
               className="w-full px-0 pb-3 pt-10 text-lg text-white bg-transparent border-0 border-b-2 border-gray-500 appearance-none focus:outline-none focus:border-blue-500 peer"
             />
-            <label
-              className="absolute text-lg text-gray-300 duration-300 transform scale-75 top-2.5 origin-[0] left-0 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-3 peer-focus:scale-75 peer-focus:-translate-y-1 peer-focus:text-blue-500"
-            >
+            <label className="absolute text-lg text-gray-300 duration-300 transform scale-75 top-2.5 origin-[0] left-0 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-3 peer-focus:scale-75 peer-focus:-translate-y-1 peer-focus:text-blue-500">
               Contraseña
             </label>
           </div>

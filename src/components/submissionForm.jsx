@@ -6,6 +6,7 @@ export function SubmissionForm({ problem, onSubmit }) {
   const [sourceCode, setSourceCode] = useState("");
   const [language, setLanguage] = useState("python");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const idUser = localStorage.getItem("idUser");
 
   const languages = [
     { id: "python", name: "Python" },
@@ -33,7 +34,7 @@ export function SubmissionForm({ problem, onSubmit }) {
         sourceCode,
         language,
         problemId: problem.codProblem,
-        userId: "test-user-id", // Este valor debería venir del sistema de autenticación
+        userId: idUser, // Este valor debería venir del sistema de autenticación
       };
 
       await onSubmit(submission);

@@ -1,10 +1,13 @@
 import { useState, useEffect, useCallback } from "react";
 import { Link } from "react-router-dom";
 import { fetchProblems } from "../services/apiProblem";
+import { isAdmin } from "../servicesUsuarios/authService";
 
 function ProblemListPage() {
   const [problems, setProblems] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  const isAuthenticated = !!localStorage.getItem("authToken");
 
   const loadProblems = useCallback(async () => {
     try {
@@ -23,15 +26,17 @@ function ProblemListPage() {
   }, [loadProblems]); // ✅ Dependencia agregada correctamente
 
   return (
-    <div>
+    <div className="max-w-6xl mx-auto">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold text-gray-900">Problemas</h1>
-        <Link
-          to="/problems/create"
-          className="bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium py-2 px-4 rounded"
-        >
-          Crear Problema
-        </Link>
+        {isAuthenticated && isAdmin() && (
+          <Link
+            to="/problems/create"
+            className="bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium py-2 px-4 rounded"
+          >
+            Crear Problema
+          </Link>
+        )}
       </div>
 
       {loading ? (
@@ -52,6 +57,7 @@ function ProblemListPage() {
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Etiquetas
                 </th>
+
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Acciones
                 </th>
@@ -93,20 +99,34 @@ function ProblemListPage() {
                       ))}
                     </div>
                   </td>
+
                   <td className="px-6 py-4 whitespace-nowrap text-sm">
                     <div className="flex space-x-2">
-                      <Link
-                        to={`/problems/${problem.codProblem}/submit`}
-                        className="text-blue-600 hover:text-blue-900"
-                      >
-                        Resolver
-                      </Link>
-                      <Link
-                        to={`/problems/edit/${problem.codProblem}`}
-                        className="text-gray-600 hover:text-gray-900"
-                      >
-                        Editar
-                      </Link>
+                      {/* Enlace "Resolver" con verificación de autenticación */}
+                      {isAuthenticated ? (
+                        <Link
+                          to={`/problems/${problem.codProblem}/submit`}
+                          className="text-blue-600 hover:text-blue-900"
+                        >
+                          Resolver
+                        </Link>
+                      ) : (
+                        <Link
+                          to="/login"
+                          className="text-blue-600 hover:text-blue-900"
+                        >
+                          Resolver
+                        </Link>
+                      )}
+
+                      {isAuthenticated && isAdmin() && (
+                        <Link
+                          to={`/problems/edit/${problem.codProblem}`}
+                          className="text-gray-600 hover:text -gray-900"
+                        >
+                          Editar
+                        </Link>
+                      )}
                     </div>
                   </td>
                 </tr>

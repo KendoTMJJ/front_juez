@@ -9,8 +9,12 @@ import SubmissionDetailPage from "./pages/SubmissionDetailPage";
 import CreateProblemPage from "./pages/CreateProblemPage";
 import EditProblemPage from "./pages/EditProblemPage";
 import RankingsPage from "./pages/RankingsPage";
-import Login from "./pagesUsuarios/loginPage";
-import Register from "./pagesUsuarios/registerPage";
+import Login from "./pagesUsers/loginPage";
+import Register from "./pagesUsers/registerPage";
+import ProfilePage from "./pagesUsers/profilePage";
+import AdminPage from "./pagesUsers/adminPage";
+import Footer from "./components/Footer";
+import EditProfilePage from "./pagesUsers/EditProfilePage";
 
 function App() {
   return (
@@ -21,6 +25,8 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/admin" element={<AdminPage />} />
           <Route path="/problems" element={<ProblemListPage />} />
           <Route path="/problems/:id" element={<ProblemDetailPage />} />
           <Route path="/problems/create" element={<CreateProblemPage />} />
@@ -29,8 +35,10 @@ function App() {
           <Route path="/submissions" element={<SubmissionListPage />} />
           <Route path="/submissions/:id" element={<SubmissionDetailPage />} />
           <Route path="/rankings" element={<RankingsPage />} />
+          <Route path="/edit-profile/:id" element={<EditProfilePage />} />
         </Routes>
       </main>
+      <Footer />
     </div>
   );
 }

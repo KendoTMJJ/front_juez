@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
-import axios from "axios";
+import { getSubmissionById } from "../services/apiSubmission";
 
 function SubmissionDetailPage() {
   const { id } = useParams();
@@ -15,10 +15,8 @@ function SubmissionDetailPage() {
   const fetchSubmission = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(
-        `http://localhost:3213/api/submissions/findOne/${id}`
-      );
-      setSubmission(response.data);
+      const data = await getSubmissionById(id);
+      setSubmission(data);
       setError(null);
     } catch (err) {
       console.error("Error fetching submission:", err);

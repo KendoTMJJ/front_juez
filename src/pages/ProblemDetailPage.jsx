@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
-import axios from "axios";
+import { deleteProblem, findProbleById } from "../services/apiProblem";
+import { isAdmin } from "../servicesUsuarios/authService";
 
 function ProblemDetailPage() {
   const { id } = useParams();
@@ -9,6 +10,8 @@ function ProblemDetailPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const isAuthenticated = !!localStorage.getItem("authToken");
+
   useEffect(() => {
     fetchProblem();
   }, [id]);
@@ -16,10 +19,8 @@ function ProblemDetailPage() {
   const fetchProblem = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(
-        `http://localhost:3213/api/problems/findOne/${id}`
-      );
-      setProblem(response.data);
+      const data = await findProbleById(id);
+      setProblem(data);
       setError(null);
     } catch (err) {
       console.error("Error fetching problem:", err);
@@ -36,7 +37,7 @@ function ProblemDetailPage() {
       window.confirm("¿Estás seguro de que quieres eliminar este problema?")
     ) {
       try {
-        await axios.delete(`http://localhost:3213/api/problems/${id}`);
+        await deleteProblem(id);
         navigate("/problems");
       } catch (err) {
         console.error("Error deleting problem:", err);
@@ -77,20 +78,22 @@ function ProblemDetailPage() {
         <div className="flex justify-between items-center mb-4">
           <h1 className="text-2xl font-bold text-gray-900">{problem.title}</h1>
 
-          <div className="flex space-x-2">
-            <Link
-              to={`/problems/edit/${id}`}
-              className="bg-gray-600 hover:bg-gray-700 text-white text-sm font-medium py-2 px-4 rounded"
-            >
-              Editar
-            </Link>
-            <button
-              onClick={handleDelete}
-              className="bg-red-600 hover:bg-red-700 text-white text-sm font-medium py-2 px-4 rounded"
-            >
-              Eliminar
-            </button>
-          </div>
+          {isAuthenticated && isAdmin() && (
+            <div className="flex space-x-2">
+              <Link
+                to={`/problems/edit/${id}`}
+                className="bg-gray-600 hover:bg-gray-700 text-white text-sm font-medium py-2 px-4 rounded"
+              >
+                Editar
+              </Link>
+              <button
+                onClick={handleDelete}
+                className="bg-red-600 hover:bg-red-700 text-white text-sm font-medium py-2 px-4 rounded"
+              >
+                Eliminar
+              </button>
+            </div>
+          )}
         </div>
 
         <div className="flex flex-wrap gap-2 mb-4">
@@ -136,15 +139,12 @@ function ProblemDetailPage() {
             <p className="text-gray-700">{problem.outputFormat}</p>
           </div>
 
-          <div>
-            <h2 className="text-lg font-semibold mb-2">Restricciones</h2>
-            <p className="text-gray-700">
-              <ul className="list-disc pl-5">
-                {problem.constraints.map((constraint, index) => (
-                  <li key={index}>{constraint}</li>
-                ))}
-              </ul>
-            </p>
+          <div className="text-gray-700">
+            <ul className="list-disc pl-5">
+              {problem.constraints.map((constraint, index) => (
+                <li key={index}>{constraint}</li>
+              ))}
+            </ul>
           </div>
         </div>
 
@@ -175,9 +175,11 @@ function ProblemDetailPage() {
         )}
 
         <div>
-          <button className="text-white">
-            <Link to={`/problems/${id}/submit`}>Resolver este problema</Link>
-          </button>
+          {isAuthenticated && (
+            <button className="text-white">
+              <Link to={`/problems/${id}/submit`}>Resolver este problema</Link>
+            </button>
+          )}
         </div>
       </div>
     </div>
