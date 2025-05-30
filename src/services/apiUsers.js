@@ -1,11 +1,11 @@
 const BACKEND_URL = import.meta.env.VITE_USERS_URL;
 
-// Función auxiliar para obtener el token de autenticación
+// Get auth token
 const getAuthToken = () => {
     return localStorage.getItem("authToken")
 }
 
-// Función auxiliar para crear headers con autenticación
+// Generate headers with authentication
 const getAuthHeaders = () => {
     const token = getAuthToken()
     return {
@@ -14,6 +14,7 @@ const getAuthHeaders = () => {
     }
   }
 
+  // Get user data by ID
 export async function getInfoUsers(id){
     const response = await fetch(`${BACKEND_URL}/users/${id}`,{
         headers: getAuthHeaders(),
@@ -26,3 +27,33 @@ export async function getInfoUsers(id){
       return await response.json()
 
   }
+
+  // Update user profile data by ID
+export async function updateUserById(id, updatedData) {
+  const response = await fetch(`${BACKEND_URL}/users/${id}`, {
+    method: "PATCH",
+    headers: getAuthHeaders(),
+    body: JSON.stringify(updatedData),
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to update user profile");
+  }
+
+  return await response.json();
+}
+
+// Change user's password
+export async function changeUserPassword(id, passwords) {
+  const response = await fetch(`${BACKEND_URL}/users/${id}/change-password`, {
+    method: "PATCH",
+    headers: getAuthHeaders(),
+    body: JSON.stringify(passwords), // { currentPassword, newPassword }
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to change password");
+  }
+
+  return await response.json();
+}

@@ -39,7 +39,11 @@ function ProfilePage() {
   };
 
   const handleEditProfile = () => {
-    navigate("/profile/edit");
+    if (userId) {
+    navigate(`/edit-profile/${userId}`);
+  } else {
+    setError("No se pudo obtener el ID del usuario");
+  }
   };
 
   if (loading) {

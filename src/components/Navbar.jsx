@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Code, FileText, Menu, User, X, LogOut, Settings } from "lucide-react";
-import { logout } from "../servicesUsuarios/authService";
+import { isAdmin, logout } from "../servicesUsuarios/authService";
 
 export function Navbar() {
   const userData = JSON.parse(localStorage.getItem("userData"));
@@ -80,14 +80,14 @@ export function Navbar() {
                 <>
 
                 {/* Botón de Admin - Visible para todos los usuarios autenticados */}
-                  <button
+                  {isAdmin() &&(<button
                     onClick={() => navigate("/admin")}
                     className="flex items-center px-3 py-2 rounded-md text-white bg-red-600 hover:bg-red-700 transition-colors"
                     title="Panel de Administración"
                   >
                     <Settings className="h-4 w-4 mr-1" />
                     <span className="text-sm font-medium">Admin</span>
-                  </button>
+                  </button>)}
                   <button
                     onClick={() => navigate("/profile")}
                     className="p-1 rounded-full text-gray-500 hover:text-gray-700 focus:outline-none"

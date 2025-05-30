@@ -14,6 +14,7 @@ import Register from "./pagesUsers/registerPage";
 import ProfilePage from "./pagesUsers/profilePage";
 import AdminPage from "./pagesUsers/adminPage";
 import Footer from "./components/Footer";
+import EditProfilePage from "./pagesUsers/EditProfilePage";
 
 function App() {
   return (
@@ -34,6 +35,7 @@ function App() {
           <Route path="/submissions" element={<SubmissionListPage />} />
           <Route path="/submissions/:id" element={<SubmissionDetailPage />} />
           <Route path="/rankings" element={<RankingsPage />} />
+          <Route path="/edit-profile/:id" element={<EditProfilePage />} />
         </Routes>
       </main>
       <Footer />
