@@ -7,27 +7,27 @@ export function Footer() {
   return (
     <footer className="sticky top-[100vh] bg-gray-800 text-white py-8">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-7xl mx-auto">
-        {/* Columna 1: Sobre Nosotros */}
+        {/* Column 1: About Us */}
         <div className="space-y-4">
-          <h2 className="text-xl font-bold text-blue-600">Sobre Nosotros</h2>
+          <h2 className="text-xl font-bold text-blue-600">About Us</h2>
           <p className="text-gray-300 leading-relaxed">
-            Esta plataforma está diseñada para desarrolladores que desean
-            fortalecer sus habilidades en lógica de programación mediante la
-            resolución de retos algorítmicos. Los usuarios pueden enfrentarse a
-            problemas reales que les permitirán desarrollar habilidades clave.
+            This platform is designed for developers who want to strengthen
+            their programming logic skills by solving algorithmic challenges.
+            Users can face real-world problems that will help them develop key
+            abilities.
           </p>
         </div>
 
-        {/* Columna 2: Links Rápidos */}
+        {/* Column 2: Quick Links */}
         <div className="space-y-4">
-          <h2 className="text-xl font-bold text-blue-600">Links Rápidos</h2>
+          <h2 className="text-xl font-bold text-blue-600">Quick Links</h2>
           <ul className="space-y-2">
             <li>
               <Link
                 to="/problems"
                 className="inline-block text-gray-300 hover:text-white transition-colors duration-200"
               >
-                Problemas
+                Problems
               </Link>
             </li>
             <li>
@@ -35,7 +35,7 @@ export function Footer() {
                 to="/rankings"
                 className="inline-block text-gray-300 hover:text-white transition-colors duration-200"
               >
-                Clasificación
+                Rankings
               </Link>
             </li>
             <li>
@@ -43,15 +43,15 @@ export function Footer() {
                 to="/contact"
                 className="inline-block text-gray-300 hover:text-white transition-colors duration-200"
               >
-                Contáctanos
+                Contact Us
               </Link>
             </li>
           </ul>
         </div>
 
-        {/* Columna 3: Redes Sociales */}
+        {/* Column 3: Social Media */}
         <div className="space-y-4">
-          <h2 className="text-xl font-bold text-blue-600">Síguenos</h2>
+          <h2 className="text-xl font-bold text-blue-600">Follow Us</h2>
           <ul className="flex space-x-6">
             <li>
               <a
@@ -92,8 +92,8 @@ export function Footer() {
       {/* Copyright */}
       <div className="border-t border-gray-700 mt-8 pt-6 text-center">
         <p className="text-gray-400 text-sm">
-          &copy; {new Date().getFullYear()} Sistemas Santoto Tunja. Todos los
-          derechos reservados.
+          &copy; {new Date().getFullYear()} Sistemas Santoto Tunja. All rights
+          reserved.
         </p>
       </div>
     </footer>

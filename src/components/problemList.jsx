@@ -1,5 +1,11 @@
 import { useState } from "react";
 
+/**
+ * Component to display a list of problems
+ * @param {Object} props - Component props
+ * @param {Array} props.problems - Array of problem objects
+ * @param {Function} props.onSelectProblem - Callback when a problem is selected
+ */
 export function ProblemList({ problems, onSelectProblem }) {
   const [selectedId, setSelectedId] = useState(null);
 
