@@ -32,12 +32,12 @@ const Login = () => {
       console.log("Resultado del login:", result);
 
       if (result.success) {
-        // Login exitoso, redirigir al dashboard o página principal
+        // Login successful, redirect to home page
         navigate("/");
       }
     } catch (err) {
       console.error("Error completo:", err);
-      setError(err.message || "Error al iniciar sesión. Inténtalo de nuevo.");
+      setError(err.message || "Error logging in, please try again.");
     } finally {
       setLoading(false);
     }
@@ -47,7 +47,7 @@ const Login = () => {
     <div className="flex justify-center items-center min-h-screen bg-white">
       <div className="bg-slate-800 border border-slate-700 rounded-xl p-12 shadow-xl w-full max-w-2xl">
         <h1 className="text-5xl font-extrabold text-center text-white mb-8">
-          Inicia sesión
+          Log In
         </h1>
 
         {error && (
@@ -57,7 +57,7 @@ const Login = () => {
         )}
 
         <form className="space-y-8" onSubmit={handleSubmit}>
-          {/* Campo de usuario */}
+          {/* User field */}
           <div className="relative">
             <input
               type="text"
@@ -68,11 +68,11 @@ const Login = () => {
               className="w-full px-0 pb-3 pt-10 text-lg text-white bg-transparent border-0 border-b-2 border-gray-500 appearance-none focus:outline-none focus:border-blue-500 peer"
             />
             <label className="absolute text-lg text-gray-300 duration-300 transform scale-75 top-2.5 origin-[0] left-0 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-3 peer-focus:scale-75 peer-focus:-translate-y-1 peer-focus:text-blue-500">
-              Nombre de usuario
+              Username
             </label>
           </div>
 
-          {/* Campo de contraseña */}
+          {/* Password field */}
           <div className="relative">
             <input
               type="password"
@@ -83,24 +83,24 @@ const Login = () => {
               className="w-full px-0 pb-3 pt-10 text-lg text-white bg-transparent border-0 border-b-2 border-gray-500 appearance-none focus:outline-none focus:border-blue-500 peer"
             />
             <label className="absolute text-lg text-gray-300 duration-300 transform scale-75 top-2.5 origin-[0] left-0 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-3 peer-focus:scale-75 peer-focus:-translate-y-1 peer-focus:text-blue-500">
-              Contraseña
+              Password
             </label>
           </div>
 
-          {/* Botón */}
+          {/* Button */}
           <button
             type="submit"
             disabled={loading}
             className="w-full text-xl font-bold text-black bg-blue-600 py-3 rounded-xl hover:bg-blue-700 transition-colors duration-300 disabled:bg-blue-400"
           >
-            {loading ? "Procesando..." : "Iniciar sesión"}
+            {loading ? "Processing..." : "Log In"}
           </button>
 
-          {/* Enlace a register */}
+          {/* Link to register */}
           <p className="text-center text-gray-400 mt-4">
-            ¿No tienes cuenta?{" "}
+            Don't have an account?{" "}
             <a href="/register" className="text-blue-500 hover:underline">
-              Regístrate
+              Sign Up
             </a>
           </p>
         </form>

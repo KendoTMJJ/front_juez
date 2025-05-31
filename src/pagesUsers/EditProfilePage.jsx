@@ -73,10 +73,10 @@ function EditProfilePage() {
         lastName: formData.lastName,
         bio: formData.bio,
       });
-      setSuccessMessage("Perfil actualizado correctamente.");
+      setSuccessMessage("Profile updated successfully.");
     } catch (err) {
       console.error("Error updating profile:", err);
-      setError("Error al actualizar el perfil.");
+      setError("Error updating profile.");
     }
   };
 
@@ -84,7 +84,7 @@ function EditProfilePage() {
   const handlePasswordChange = async (e) => {
     e.preventDefault();
     if (formData.password !== formData.confirmPassword) {
-      setError("Las contraseñas no coinciden.");
+      setError("Passwords do not match.");
       return;
     }
     try {
@@ -92,7 +92,7 @@ function EditProfilePage() {
         currentPassword: formData.currentPassword,
         newPassword: formData.password,
       });
-      setSuccessMessage("Contraseña actualizada correctamente.");
+      setSuccessMessage("Password updated successfully.");
       setFormData((prev) => ({
         ...prev,
         password: "",
@@ -101,14 +101,14 @@ function EditProfilePage() {
       }));
     } catch (err) {
       console.error("Error changing password:", err);
-      setError("Error al cambiar la contraseña.");
+      setError("Error changing password.");
     }
   };
 
   if (loading) {
     return (
       <div className="text-center py-10">
-        <p className="text-gray-500">Cargando cambios...</p>
+        <p className="text-gray-500">Loading changes...</p>
       </div>
     );
   }
@@ -116,9 +116,9 @@ function EditProfilePage() {
   return (
     <div className="max-w-4xl mx-auto p-6 bg-white shadow rounded-xl">
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold">Editar Perfil</h1>
+        <h1 className="text-2xl font-bold">Edit Profile</h1>
         <button onClick={() => navigate(-1)} className="text-gray-600 hover:text-gray-800 px-3 py-1 border rounded">
-          Volver
+          Back
         </button>
       </div>
 
@@ -130,13 +130,13 @@ function EditProfilePage() {
         </div>
       )}
 
-      {/* Formulario de perfil */}
+      {/* Profile form */}
       <form onSubmit={handleProfileSubmit} className="space-y-4 mb-8">
-        <h2 className="text-lg font-semibold text-gray-800 border-b pb-2">Información del Perfil</h2>
+        <h2 className="text-lg font-semibold text-gray-800 border-b pb-2">Profile Information</h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Nombre de usuario</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Username</label>
             <input
               type="text"
               name="username"
@@ -148,7 +148,7 @@ function EditProfilePage() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Correo electrónico</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
             <input
               type="email"
               name="email"
@@ -160,7 +160,7 @@ function EditProfilePage() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Nombre</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">First Name</label>
             <input
               type="text"
               name="firstName"
@@ -172,7 +172,7 @@ function EditProfilePage() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Apellido</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Last Name</label>
             <input
               type="text"
               name="lastName"
@@ -185,13 +185,13 @@ function EditProfilePage() {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Biografía</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Biography</label>
           <textarea
             name="bio"
             value={formData.bio}
             onChange={handleChange}
             rows={4}
-            placeholder="Cuéntanos algo sobre ti..."
+            placeholder="Tell us something about you..."
             className="mt-1 p-2 w-full border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
           />
         </div>
@@ -200,18 +200,18 @@ function EditProfilePage() {
           type="submit"
           className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-md font-medium transition-colors"
         >
-          Guardar Cambios
+          Save Changes
         </button>
       </form>
 
       <hr className="my-8" />
 
-      {/* Formulario de cambio de contraseña */}
+      {/* Password change form */}
       <form onSubmit={handlePasswordChange} className="space-y-4">
-        <h2 className="text-lg font-semibold text-gray-800 border-b pb-2">Cambiar Contraseña</h2>
+        <h2 className="text-lg font-semibold text-gray-800 border-b pb-2">Change Password</h2>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Contraseña actual</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Current Password</label>
           <input
             type="password"
             name="currentPassword"
@@ -224,7 +224,7 @@ function EditProfilePage() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Nueva contraseña</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">New Password</label>
             <input
               type="password"
               name="password"
@@ -237,7 +237,7 @@ function EditProfilePage() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Confirmar nueva contraseña</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Confirm New Password</label>
             <input
               type="password"
               name="confirmPassword"
@@ -254,7 +254,7 @@ function EditProfilePage() {
           type="submit"
           className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-md font-medium transition-colors"
         >
-          Cambiar Contraseña
+          Change Password
         </button>
       </form>
     </div>

@@ -27,40 +27,40 @@ const Register = () => {
     e.preventDefault();
     setError("");
 
-    // Validación básica
+    // Basic validation
     if (formData.password !== formData.confirmPassword) {
-      setError("Las contraseñas no coinciden");
+      setError("Passwords do not match");
       return;
     }
 
     try {
       setLoading(true);
 
-      // Preparar datos para enviar al backend según tu DTO
+      // Prepare data to send to the backend according to your DTO
       const userData = {
         username: formData.username,
         email: formData.email,
         password: formData.password,
         firstName: formData.firstName || "",
         lastName: formData.lastName || "",
-        profilePicture: "", // Campo vacío por defecto
-        bio: "", // Campo vacío por defecto
+        profilePicture: "", // Empty field by default
+        bio: "", // Empty field by default
       };
 
       const result = await registerUser(userData);
 
       if (result.success) {
-        // Registro exitoso, redirigir al login
+        // Registration successful, redirect to login
         navigate("/login");
       }
     } catch (err) {
-      // Manejar errores específicos del backend
+      // Handle specific backend errors
       if (err.message.includes("El usuario ya existe")) {
-        setError("El nombre de usuario ya está en uso");
+        setError("The username is already taken");
       } else if (err.message.includes("El email ya está en uso")) {
-        setError("El correo electrónico ya está registrado");
+        setError("The email is already registered");
       } else {
-        setError(err.message || "Error al registrar. Inténtalo de nuevo.");
+        setError(err.message || "Error registering. Please try again.");
       }
     } finally {
       setLoading(false);
@@ -70,14 +70,14 @@ const Register = () => {
   return (
     <div className="flex justify-center items-center min-h-screen bg-white">
       <div className="bg-slate-800 border border-slate-700 rounded-xl p-10 shadow-xl w-full max-w-2xl">
-        <h1 className="text-5xl font-extrabold text-center text-white mb-8">Regístrate</h1>
+        <h1 className="text-5xl font-extrabold text-center text-white mb-8">Sign Up</h1>
 
         {error && <div className="bg-red-500 text-white p-3 rounded-lg mb-6">{error}</div>}
 
         <form className="space-y-6" onSubmit={handleSubmit}>
-          {/* Campos obligatorios */}
+          {/* Required fields */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Nombre de usuario */}
+            {/* Username */}
             <div className="relative">
               <input
                 type="text"
@@ -88,7 +88,7 @@ const Register = () => {
                 className="w-full px-0 pb-2.5 pt-10 text-base text-white bg-transparent border-0 border-b-2 border-gray-500 appearance-none focus:outline-none focus:border-blue-500 peer"
               />
               <label className="absolute text-base text-gray-300 duration-300 transform scale-75 top-2.5 origin-[0] left-0 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-3 peer-focus:scale-75 peer-focus:-translate-y-1 peer-focus:text-blue-500">
-                Nombre de usuario
+                Username
               </label>
             </div>
 
@@ -103,11 +103,11 @@ const Register = () => {
                 className="w-full px-0 pb-2.5 pt-10 text-base text-white bg-transparent border-0 border-b-2 border-gray-500 appearance-none focus:outline-none focus:border-blue-500 peer"
               />
               <label className="absolute text-base text-gray-300 duration-300 transform scale-75 top-2.5 origin-[0] left-0 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-3 peer-focus:scale-75 peer-focus:-translate-y-1 peer-focus:text-blue-500">
-                Correo electrónico
+                Email
               </label>
             </div>
 
-            {/* Contraseña */}
+            {/* Password */}
             <div className="relative">
               <input
                 type="password"
@@ -118,11 +118,11 @@ const Register = () => {
                 className="w-full px-0 pb-2.5 pt-10 text-base text-white bg-transparent border-0 border-b-2 border-gray-500 appearance-none focus:outline-none focus:border-blue-500 peer"
               />
               <label className="absolute text-base text-gray-300 duration-300 transform scale-75 top-2.5 origin-[0] left-0 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-3 peer-focus:scale-75 peer-focus:-translate-y-1 peer-focus:text-blue-500">
-                Contraseña
+                Password
               </label>
             </div>
 
-            {/* Confirmar Contraseña */}
+            {/* Confirm Password */}
             <div className="relative">
               <input
                 type="password"
@@ -133,14 +133,14 @@ const Register = () => {
                 className="w-full px-0 pb-2.5 pt-10 text-base text-white bg-transparent border-0 border-b-2 border-gray-500 appearance-none focus:outline-none focus:border-blue-500 peer"
               />
               <label className="absolute text-base text-gray-300 duration-300 transform scale-75 top-2.5 origin-[0] left-0 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-3 peer-focus:scale-75 peer-focus:-translate-y-1 peer-focus:text-blue-500">
-                Confirmar Contraseña
+                Confirm Password
               </label>
             </div>
           </div>
 
-          {/* Campos opcionales */}
+          {/* Optional fields */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Nombre */}
+            {/* First Name */}
             <div className="relative">
               <input
                 type="text"
@@ -150,11 +150,11 @@ const Register = () => {
                 className="w-full px-0 pb-2.5 pt-10 text-base text-white bg-transparent border-0 border-b-2 border-gray-500 appearance-none focus:outline-none focus:border-blue-500 peer"
               />
               <label className="absolute text-base text-gray-300 duration-300 transform scale-75 top-2.5 origin-[0] left-0 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-3 peer-focus:scale-75 peer-focus:-translate-y-1 peer-focus:text-blue-500">
-                Nombre (opcional)
+                First Name (optional)
               </label>
             </div>
 
-            {/* Apellido */}
+            {/* Last Name */}
             <div className="relative">
               <input
                 type="text"
@@ -164,25 +164,25 @@ const Register = () => {
                 className="w-full px-0 pb-2.5 pt-10 text-base text-white bg-transparent border-0 border-b-2 border-gray-500 appearance-none focus:outline-none focus:border-blue-500 peer"
               />
               <label className="absolute text-base text-gray-300 duration-300 transform scale-75 top-2.5 origin-[0] left-0 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-3 peer-focus:scale-75 peer-focus:-translate-y-1 peer-focus:text-blue-500">
-                Apellido (opcional)
+                Last Name (optional)
               </label>
             </div>
           </div>
 
-          {/* Botón de registro */}
+          {/* Register button */}
           <button
             type="submit"
             disabled={loading}
             className="w-full text-lg font-semibold text-black bg-blue-600 py-2 rounded-lg hover:bg-blue-700 transition-colors duration-300 disabled:bg-blue-400"
           >
-            {loading ? "Procesando..." : "Registrarse"}
+            {loading ? "Processing..." : "Sign Up"}
           </button>
 
-          {/* Enlace a login */}
+          {/* Link to login */}
           <p className="text-center text-gray-400 mt-4">
-            ¿Ya tienes cuenta?{" "}
+            Do you already have an account?{" "}
             <a href="/login" className="text-blue-500 hover:underline">
-              Inicia sesión
+              Sign In
             </a>
           </p>
         </form>

@@ -42,7 +42,7 @@ function EditProblemPage() {
         `http://localhost:3213/api/problems/findOne/${id}`
       );
 
-      // Asegurarse de que constraints y tags sean arrays
+      // make sure that the contraints, tags, and testCases are arrays
       const problem = {
         ...response.data,
         constraints: Array.isArray(response.data.constraints)
@@ -68,7 +68,7 @@ function EditProblemPage() {
     } catch (err) {
       console.error("Error fetching problem:", err);
       setError(
-        "Error al cargar el problema. Por favor, intenta de nuevo más tarde."
+        "An error occurred while loading the problem. Please try again later."
       );
     } finally {
       setLoading(false);
@@ -159,31 +159,31 @@ function EditProblemPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validar que los campos requeridos estén completos
+    // make sure all required fields are filled
     if (
       !formData.title ||
       !formData.description ||
       !formData.inputFormat ||
       !formData.outputFormat
     ) {
-      alert("Por favor, completa todos los campos requeridos.");
+      alert("Please fill all required fields.");
       return;
     }
 
-    // Validar que haya al menos un caso de prueba
+    // make sure that there is at least one test case
     if (formData.testCases.length === 0) {
-      alert("Debes añadir al menos un caso de prueba.");
+      alert("Please add at least one test case.");
       return;
     }
 
-    // Validar que la suma de puntuaciones sea 100
+    // make sure that the sum of scores is 100
     const totalScore = formData.testCases.reduce(
       (sum, tc) => sum + tc.score,
       0
     );
     if (totalScore !== 100) {
       alert(
-        `La suma de puntuaciones debe ser 100. Actualmente es ${totalScore}.`
+        `The sum of scores must be 100. Currently it is ${totalScore}.`
       );
       return;
     }
@@ -191,7 +191,7 @@ function EditProblemPage() {
     try {
       setSubmitting(true);
 
-      // Filtrar tags y constraints vacíos
+      // Filter empty tags and constraints
       const cleanedData = {
         ...formData,
         tags: formData.tags.filter((tag) => tag.trim() !== ""),
@@ -208,7 +208,7 @@ function EditProblemPage() {
     } catch (err) {
       console.error("Error updating problem:", err);
       alert(
-        "Error al actualizar el problema. Por favor, intenta de nuevo más tarde."
+        "An error occurred while updating the problem. Please try again later."
       );
     } finally {
       setSubmitting(false);
@@ -218,7 +218,7 @@ function EditProblemPage() {
   if (loading) {
     return (
       <div className="text-center py-10">
-        <p className="text-gray-500">Cargando problema...</p>
+        <p className="text-gray-500">Loading problem...</p>
       </div>
     );
   }
@@ -235,21 +235,21 @@ function EditProblemPage() {
     <div className="bg-white shadow-md rounded-lg overflow-hidden">
       <div className="p-6">
         <h1 className="text-2xl font-bold text-gray-900 mb-6">
-          Editar Problema
+          Edit Problem
         </h1>
 
         <form onSubmit={handleSubmit}>
           <div className="grid grid-cols-1 gap-6">
-            {/* Información básica */}
+            {/* Basic information */}
             <div>
-              <h2 className="text-lg font-semibold mb-4">Información Básica</h2>
+              <h2 className="text-lg font-semibold mb-4">Basic Information</h2>
 
               <div className="mb-4">
                 <label
                   htmlFor="title"
                   className="block text-sm font-medium text-gray-700 mb-1"
                 >
-                  Título *
+                  Title *
                 </label>
                 <input
                   type="text"
@@ -267,7 +267,7 @@ function EditProblemPage() {
                   htmlFor="description"
                   className="block text-sm font-medium text-gray-700 mb-1"
                 >
-                  Descripción *
+                  Description *
                 </label>
                 <textarea
                   id="description"
@@ -285,7 +285,7 @@ function EditProblemPage() {
                   htmlFor="inputFormat"
                   className="block text-sm font-medium text-gray-700 mb-1"
                 >
-                  Formato de entrada *
+                  Input format *
                 </label>
                 <textarea
                   id="inputFormat"
@@ -303,7 +303,7 @@ function EditProblemPage() {
                   htmlFor="outputFormat"
                   className="block text-sm font-medium text-gray-700 mb-1"
                 >
-                  Formato de salida *
+                  Output format *
                 </label>
                 <textarea
                   id="outputFormat"
@@ -317,9 +317,9 @@ function EditProblemPage() {
               </div>
             </div>
 
-            {/* Restricciones */}
+            {/* Restrictions */}
             <div>
-              <h2 className="text-lg font-semibold mb-4">Restricciones</h2>
+              <h2 className="text-lg font-semibold mb-4">Restrictions</h2>
 
               {formData.constraints.map((constraint, index) => (
                 <div key={index} className="flex mb-2">
@@ -337,7 +337,7 @@ function EditProblemPage() {
                     onClick={() => removeConstraint(index)}
                     className="ml-2 px-3 py-2 bg-red-100 text-red-600 rounded-md hover:bg-red-200"
                   >
-                    Eliminar
+                    Remove
                   </button>
                 </div>
               ))}
@@ -347,13 +347,13 @@ function EditProblemPage() {
                 onClick={addConstraint}
                 className="mt-2 px-3 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200"
               >
-                + Añadir restricción
+                + Add restriction
               </button>
             </div>
 
-            {/* Configuración */}
+            {/* Configuration */}
             <div>
-              <h2 className="text-lg font-semibold mb-4">Configuración</h2>
+              <h2 className="text-lg font-semibold mb-4">Configuration</h2>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
@@ -361,7 +361,7 @@ function EditProblemPage() {
                     htmlFor="timeLimit"
                     className="block text-sm font-medium text-gray-700 mb-1"
                   >
-                    Límite de tiempo (ms)
+                    Time limit (ms)
                   </label>
                   <input
                     type="number"
@@ -380,7 +380,7 @@ function EditProblemPage() {
                     htmlFor="memoryLimit"
                     className="block text-sm font-medium text-gray-700 mb-1"
                   >
-                    Límite de memoria (KB)
+                    Memory limit (KB)
                   </label>
                   <input
                     type="number"
@@ -399,7 +399,7 @@ function EditProblemPage() {
                     htmlFor="difficulty"
                     className="block text-sm font-medium text-gray-700 mb-1"
                   >
-                    Dificultad
+                    Difficulty
                   </label>
                   <select
                     id="difficulty"
@@ -408,9 +408,9 @@ function EditProblemPage() {
                     onChange={handleChange}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                   >
-                    <option value="easy">Fácil</option>
-                    <option value="medium">Medio</option>
-                    <option value="hard">Difícil</option>
+                    <option value="easy">Easy</option>
+                    <option value="medium">Medium</option>
+                    <option value="hard">Hard</option>
                   </select>
                 </div>
 
@@ -427,15 +427,15 @@ function EditProblemPage() {
                     htmlFor="isPublic"
                     className="ml-2 block text-sm text-gray-700"
                   >
-                    Problema público
+                    Public problem
                   </label>
                 </div>
               </div>
             </div>
 
-            {/* Etiquetas */}
+            {/* Tags */}
             <div>
-              <h2 className="text-lg font-semibold mb-4">Etiquetas</h2>
+              <h2 className="text-lg font-semibold mb-4">Tags</h2>
 
               {formData.tags.map((tag, index) => (
                 <div key={index} className="flex mb-2">
@@ -451,7 +451,7 @@ function EditProblemPage() {
                     onClick={() => removeTag(index)}
                     className="ml-2 px-3 py-2 bg-red-100 text-red-600 rounded-md hover:bg-red-200"
                   >
-                    Eliminar
+                    Remove
                   </button>
                 </div>
               ))}
@@ -461,13 +461,13 @@ function EditProblemPage() {
                 onClick={addTag}
                 className="mt-2 px-3 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200"
               >
-                + Añadir etiqueta
+                + Add tag
               </button>
             </div>
 
-            {/* Casos de prueba */}
+            {/* Test cases */}
             <div>
-              <h2 className="text-lg font-semibold mb-4">Casos de prueba</h2>
+              <h2 className="text-lg font-semibold mb-4">Test cases</h2>
 
               {formData.testCases.map((testCase, index) => (
                 <div
@@ -475,20 +475,20 @@ function EditProblemPage() {
                   className="mb-6 p-4 border border-gray-200 rounded-lg"
                 >
                   <div className="flex justify-between items-center mb-4">
-                    <h3 className="font-medium">Caso de prueba #{index + 1}</h3>
+                    <h3 className="font-medium">Test case #{index + 1}</h3>
                     <button
                       type="button"
                       onClick={() => removeTestCase(index)}
                       className="px-3 py-1 bg-red-100 text-red-600 rounded-md hover:bg-red-200 text-sm"
                     >
-                      Eliminar
+                      Remove
                     </button>
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Entrada
+                        Input
                       </label>
                       <textarea
                         value={testCase.input}
@@ -502,7 +502,7 @@ function EditProblemPage() {
 
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Salida esperada
+                        Expected output
                       </label>
                       <textarea
                         value={testCase.expectedOutput}
@@ -535,14 +535,14 @@ function EditProblemPage() {
                         }
                         className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                       >
-                        <option value="true">Ejemplo (visible)</option>
-                        <option value="false">Oculto (para evaluación)</option>
+                        <option value="true">Example (visible)</option>
+                        <option value="false">Hidden (for evaluation)</option>
                       </select>
                     </div>
 
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Puntuación
+                        Score
                       </label>
                       <input
                         type="number"
@@ -564,30 +564,29 @@ function EditProblemPage() {
                 onClick={addTestCase}
                 className="mt-2 px-3 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200"
               >
-                + Añadir caso de prueba
+                + Add test case
               </button>
 
               <p className="mt-2 text-sm text-gray-500">
-                Nota: La suma de puntuaciones de todos los casos de prueba debe
-                ser 100.
+                Note: The sum of scores for all test cases must be 100.
               </p>
             </div>
 
-            {/* Botones de acción */}
+            {/* Action buttons */}
             <div className="flex justify-end space-x-4 mt-6">
               <button
                 type="button"
                 onClick={() => navigate(`/problems/${id}`)}
                 className="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
               >
-                Cancelar
+                Cancel
               </button>
               <button
                 type="submit"
                 disabled={submitting}
                 className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50"
               >
-                {submitting ? "Guardando..." : "Guardar Cambios"}
+                {submitting ? "Saving..." : "Save Changes"}
               </button>
             </div>
           </div>
