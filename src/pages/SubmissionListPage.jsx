@@ -1,34 +1,64 @@
 import { useState, useEffect } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { getAllSubmissions } from "../services/apiSubmission";
+import { updateUserSolvedProblems } from "../services/apiUsers";
 
 function SubmissionListPage() {
   const userData = JSON.parse(localStorage.getItem("userData"));
   const userId = userData?.codUser;
-
   const [searchParams] = useSearchParams();
   const problemId = searchParams.get("problemId");
 
   const [submissions, setSubmissions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [processedProblems, setProcessedProblems] = useState(new Set());
 
   useEffect(() => {
     if (!userId) return; // No hay usuario autenticado
     fetchSubmissions();
-  }, [userId]);
+  }, [userId, problemId]);
 
   const fetchSubmissions = async () => {
     try {
       setLoading(true);
       const data = await getAllSubmissions({ problemId, userId });
+
+      if (!Array.isArray(data)) {
+        throw new Error("Formato de datos inválido");
+      }
+
+      // Identificar nuevos problemas aceptados
+      const newAccepted = data.filter(
+        (sub) =>
+          sub.status.toLowerCase() === "accepted" &&
+          sub.userId === userId &&
+          !processedProblems.has(sub.problem.codProblem)
+      );
+
+      // Actualizar backend para cada nuevo problema aceptado
+      if (newAccepted.length > 0) {
+        const uniqueNewProblems = [
+          ...new Set(newAccepted.map((s) => s.problem.codProblem)),
+        ];
+
+        await Promise.all(
+          uniqueNewProblems.map(async (problemId) => {
+            try {
+              await updateUserSolvedProblems(userId, problemId);
+              setProcessedProblems((prev) => new Set(prev).add(problemId));
+            } catch (error) {
+              console.error(`Error updating problem ${problemId}:`, error);
+            }
+          })
+        );
+      }
+
       setSubmissions(data);
       setError(null);
     } catch (err) {
-      console.error("Error fetching submissions:", err);
-      setError(
-        "Error al cargar los envíos. Por favor, intenta de nuevo más tarde."
-      );
+      console.error("Error al obtener submissions:", err);
+      setError("Error al cargar los envíos");
     } finally {
       setLoading(false);
     }

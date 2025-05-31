@@ -1,52 +1,35 @@
 import { useState, useEffect } from "react";
+import { getCombinedRankings } from "../services/apiUsers";
 
 function RankingsPage() {
   const [rankings, setRankings] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    // Simulación de carga de datos
-    setTimeout(() => {
-      setRankings([
-        { id: 1, username: "coder123", solvedProblems: 42, totalScore: 1850 },
-        {
-          id: 2,
-          username: "algorithm_master",
-          solvedProblems: 38,
-          totalScore: 1720,
-        },
-        { id: 3, username: "debugger", solvedProblems: 35, totalScore: 1680 },
-        { id: 4, username: "pythonista", solvedProblems: 33, totalScore: 1590 },
-        { id: 5, username: "java_dev", solvedProblems: 30, totalScore: 1450 },
-        { id: 6, username: "cpp_wizard", solvedProblems: 28, totalScore: 1380 },
-        { id: 7, username: "code_ninja", solvedProblems: 25, totalScore: 1250 },
-        {
-          id: 8,
-          username: "binary_search",
-          solvedProblems: 22,
-          totalScore: 1100,
-        },
-        {
-          id: 9,
-          username: "recursion_fan",
-          solvedProblems: 20,
-          totalScore: 980,
-        },
-        {
-          id: 10,
-          username: "dynamic_programmer",
-          solvedProblems: 18,
-          totalScore: 890,
-        },
-      ]);
-      setLoading(false);
-    }, 1000);
+    const loadRankings = async () => {
+      try {
+        setLoading(true);
+        const data = await getCombinedRankings();
+        setRankings(data);
+        setError(null);
+      } catch (err) {
+        setError("Error al cargar el ranking");
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadRankings();
   }, []);
 
   return (
     <div className="max-w-7xl mx-auto p-6 space-y-6">
-      <h1 className="text-3xl font-bold mb-6">Clasificación</h1>
-      <p className="text-lg mb-8">
+      <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">
+        Clasificación
+      </h1>
+      <p className="text-lg text-gray-600 dark:text-gray-300 mb-8">
         Los mejores programadores basados en problemas resueltos y puntuación
         total.
       </p>
@@ -54,6 +37,10 @@ function RankingsPage() {
       {loading ? (
         <div className="flex justify-center py-10">
           <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+        </div>
+      ) : error ? (
+        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+          {error}
         </div>
       ) : (
         <div className="bg-white dark:bg-gray-800 shadow-md rounded-lg overflow-hidden">

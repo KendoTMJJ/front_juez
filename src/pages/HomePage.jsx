@@ -20,8 +20,8 @@ function HomePage() {
       </h1>
 
       <p className="text-xl text-gray-600 mb-8">
-        Practice your programming skills by solving problems and 
-        submitting solutions.
+        Practice your programming skills by solving problems and submitting
+        solutions.
       </p>
 
       <div className="flex flex-col sm:flex-row justify-center gap-4">
