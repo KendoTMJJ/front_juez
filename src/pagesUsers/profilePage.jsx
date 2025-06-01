@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { getCurrentUser } from "../servicesUsuarios/authService";
 import { getInfoUsers } from "../services/apiUsers";
 
 function ProfilePage() {
@@ -24,7 +23,7 @@ function ProfilePage() {
 
       if (!data) {
         throw new Error(
-          "No se encontraron datos de usuario. Por favor inicia sesión."
+          "No user data found. Please log in."
         );
       }
 
@@ -42,14 +41,14 @@ function ProfilePage() {
     if (userId) {
       navigate(`/edit-profile/${userId}`);
     } else {
-      setError("No se pudo obtener el ID del usuario");
+      setError("Could not find user ID. Please log in again.");
     }
   };
 
   if (loading) {
     return (
       <div className="text-center py-10">
-        <p className="text-gray-500">Cargando perfil...</p>
+        <p className="text-gray-500">Loading profile...</p>
       </div>
     );
   }
@@ -65,7 +64,7 @@ function ProfilePage() {
   if (!user) {
     return (
       <div className="text-center py-10">
-        <p className="text-gray-500">No se encontró información del usuario.</p>
+        <p className="text-gray-500">No user information found.</p>
       </div>
     );
   }
@@ -73,24 +72,24 @@ function ProfilePage() {
   return (
     <div className="max-w-7xl mx-auto p-6 space-y-6">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold text-gray-900">Perfil de Usuario</h1>
+        <h1 className="text-3xl font-bold text-gray-900">User profile</h1>
         <button
           onClick={handleEditProfile}
           className="bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium py-2 px-4 rounded"
         >
-          Editar Perfil
+          Edit Profile
         </button>
       </div>
 
       <div className="flex flex-col md:flex-row gap-8">
-        {/* Sección de información básica */}
+        {/* Basic information section */}
         <div className="md:w-1/3 bg-white p-6 rounded-lg shadow">
           <div className="flex flex-col items-center mb-6">
             <div className="w-32 h-32 bg-gray-200 rounded-full mb-4 overflow-hidden">
               {user.profilePicture ? (
                 <img
                   src={user.profilePicture}
-                  alt="Foto de perfil"
+                  alt="Profile picture"
                   className="w-full h-full object-cover"
                 />
               ) : (
@@ -113,14 +112,14 @@ function ProfilePage() {
           <div className="space-y-4">
             <div>
               <h3 className="text-sm font-medium text-gray-500">
-                Correo electrónico
+                Email
               </h3>
               <p className="text-gray-900">{user.email}</p>
             </div>
 
             <div>
               <h3 className="text-sm font-medium text-gray-500">
-                Miembro desde
+                Member since
               </h3>
               <p className="text-gray-900">
                 {new Date(user.createdAt).toLocaleDateString()}
@@ -129,12 +128,12 @@ function ProfilePage() {
           </div>
         </div>
 
-        {/* Sección de estadísticas y bio */}
+        {/* Statistics and bio section */}
         <div className="md:w-2/3">
           <div className="mb-6">
-            <h2 className="text-lg font-semibold mb-2">Biografía</h2>
+            <h2 className="text-lg font-semibold mb-2">Biography</h2>
             <p className="text-gray-700">
-              {user.bio || "Este usuario no ha agregado una biografía todavía."}
+              {user.bio || "This user has not added a biography yet."}
             </p>
           </div>
 
@@ -146,7 +145,7 @@ function ProfilePage() {
 
             <div className="bg-white p-6 rounded-lg shadow">
               <h3 className="text-sm font-medium text-gray-500">
-                Problemas resueltos
+                Solved Problems
               </h3>
               <p className="text-2xl font-bold text-gray-900">
                 {user.totalProblemsSolved}
@@ -154,7 +153,7 @@ function ProfilePage() {
             </div>
 
             <div className="bg-white p-6 rounded-lg shadow">
-              <h3 className="text-sm font-medium text-gray-500">Estado</h3>
+              <h3 className="text-sm font-medium text-gray-500">Status</h3>
               <span
                 className={`px-2 py-1 text-xs rounded-full ${
                   user.isActive
@@ -162,7 +161,7 @@ function ProfilePage() {
                     : "bg-red-100 text-red-800"
                 }`}
               >
-                {user.isActive ? "Activo" : "Inactivo"}
+                {user.isActive ? "Active" : "Inactive"}
               </span>
             </div>
           </div>
@@ -170,7 +169,7 @@ function ProfilePage() {
           {user.solvedProblems && user.solvedProblems.length > 0 && (
             <div>
               <h2 className="text-lg font-semibold mb-2">
-                Problemas resueltos recientemente
+                Recently Solved Problems
               </h2>
               <div className="flex flex-wrap gap-2">
                 {user.solvedProblems.slice(0, 5).map((problemId) => (
@@ -183,7 +182,7 @@ function ProfilePage() {
                 ))}
                 {user.solvedProblems.length > 5 && (
                   <span className="px-2 py-1 text-xs bg-gray-100 text-gray-800 rounded">
-                    +{user.solvedProblems.length - 5} más
+                    +{user.solvedProblems.length - 5} more
                   </span>
                 )}
               </div>

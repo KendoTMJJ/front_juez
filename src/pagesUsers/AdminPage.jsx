@@ -1,19 +1,10 @@
 import { useState, useEffect } from "react"
-
-// Definimos el tipo de stats usando JSDoc
-/**
- * @typedef {Object} Stats
- * @property {number} totalUsers
- * @property {number} totalProblems
- * @property {number} totalSubmissions
- * @property {number} activeUsers
- */
+import { getAdminStats, getAllUsers, activateUser, deactivateUser, deleteUser, } from "../services/apiAdmin"
 
 function AdminPage() {
+  const isAuthenticated = !!localStorage.getItem("authToken")
 
-  const isAuthenticated = !!localStorage.getItem("authToken");
-
-  // Estado para almacenar las estadísticas
+  // State to store statistics
   const [stats, setStats] = useState({
     totalUsers: 0,
     totalProblems: 0,
@@ -21,78 +12,182 @@ function AdminPage() {
     activeUsers: 0,
   })
 
-  // Estado para controlar la carga
+  // State for user management
+  const [users, setUsers] = useState([])
+  const [searchTerm, setSearchTerm] = useState("")
+  const [filteredUsers, setFilteredUsers] = useState([])
+
+  // State to control loading
   const [loading, setLoading] = useState(true)
-  
-  // Estado para manejar errores
+  const [usersLoading, setUsersLoading] = useState(false)
+
+  // State to handle errors
   const [error, setError] = useState(null)
+  const [usersError, setUsersError] = useState(null)
+
+   // Function to get role color based on role name
+  const getRoleColor = (roleName) => {
+    if (!roleName) return "bg-gray-100 text-gray-800"
+
+    const name = roleName.toLowerCase()
+    if (name.includes("admin")) {
+      return "bg-purple-100 text-purple-800"
+    } else if (name.includes("profesor")) {
+      return "bg-blue-100 text-blue-800"
+    } else if (name.includes("user")) {
+      return "bg-green-100 text-green-800"
+    } else {
+      return "bg-gray-100 text-gray-800"
+    }
+  }
+
+  // Function to format role name
+  const formatRoleName = (roleName) => {
+    if (!roleName) return "Usuario"
+    return roleName.charAt(0).toUpperCase() + roleName.slice(1)
+  }
 
 
-  // Función para cargar las estadísticas desde la API
+
+  // Function to load statistics from the API
   useEffect(() => {
     const fetchStats = async () => {
       try {
         setLoading(true)
         setError(null)
-        
-        // Aquí usamos import.meta.env para acceder a las variables de entorno en Vite
-        const usersUrl = import.meta.env.VITE_USERS_URL
-        const juezUrl = import.meta.env.VITE_JUEZ_URL
-        
-        // Verificamos que las URLs estén configuradas
-        if (!usersUrl || !juezUrl) {
-          throw new Error("URLs de servicios no configuradas")
-        }
-        
-        // Hacemos las peticiones a las APIs
-        const usersResponse = await fetch(`${usersUrl}/users/list`)
-        const problemsResponse = await fetch(`${juezUrl}/api/problems/all`)
-        const submissionsResponse = await fetch(`${juezUrl}/api/submissions/all`)
-        
-        // Verificar que todas las respuestas sean exitosas
-        if (!usersResponse.ok || !problemsResponse.ok || !submissionsResponse.ok) {
-          throw new Error("Error al obtener datos de los servicios")
-        }
-        
-        // Obtener los datos
-        const usersData = await usersResponse.json()
-        const problemsData = await problemsResponse.json() 
-        const submissionsData = await submissionsResponse.json()
 
-        // Calcular estadísticas
-        const calculatedStats = {
-          totalUsers: usersData.length,
-          totalProblems: problemsData.length,
-          totalSubmissions: submissionsData.length,
-          activeUsers: usersData.filter(user => user.status === 'active').length
+        // Check authentication
+        if (!isAuthenticated) {
+          throw new Error("User not authenticated")
         }
 
+        // Use the service function that includes authentication
+        const calculatedStats = await getAdminStats()
         setStats(calculatedStats)
       } catch (err) {
-        console.error("Error al cargar estadísticas:", err)
-        setError("No se pudieron cargar las estadísticas")
+        console.error("Error loading stats:", err)
+        setError(`Failed to load stats: ${err.message}`)
       } finally {
         setLoading(false)
       }
     }
 
     fetchStats()
-  }, [])
+  }, [isAuthenticated])
+
+  // Function to load users
+  const fetchUsers = async () => {
+    try {
+      setUsersLoading(true)
+      setUsersError(null)
+
+      const usersData = await getAllUsers()
+      setUsers(usersData)
+      setFilteredUsers(usersData)
+    } catch (err) {
+      console.error("Error loading users:", err)
+      setUsersError(`Error 404: Not Found`)
+      setUsers([])
+      setFilteredUsers([])
+    } finally {
+      setUsersLoading(false)
+    }
+  }
+
+  // Load users on component mount
+  useEffect(() => {
+    if (isAuthenticated) {
+      fetchUsers()
+    }
+  }, [isAuthenticated])
+
+  // Filter users when search term changes
+  useEffect(() => {
+    if (searchTerm.trim() === "") {
+      setFilteredUsers(users)
+    } else {
+      const lowercasedSearch = searchTerm.toLowerCase()
+      const filtered = users.filter(
+        (user) =>
+          user.username?.toLowerCase().includes(lowercasedSearch) ||
+          user.email?.toLowerCase().includes(lowercasedSearch),
+      )
+      setFilteredUsers(filtered)
+    }
+  }, [searchTerm, users])
+
+  // Handle search
+  const handleSearch = (e) => {
+    setSearchTerm(e.target.value)
+  }
+
+  // Handle user status toggle
+  const handleStatusToggle = async (userId, currentStatus) => {
+    try {
+      if (currentStatus) {
+        await deactivateUser(userId)
+      } else {
+        await activateUser(userId)
+      }
+      fetchUsers() // Refresh users list
+    } catch (err) {
+      console.error("Error updating user status:", err)
+      alert("Error updating user status")
+    }
+  }
+
+  // Handle user deletion
+  const handleDeleteUser = async (userId) => {
+    if (window.confirm("Are you sure you want to delete this user?")) {
+      try {
+        await deleteUser(userId)
+        fetchUsers() // Refresh users list
+      } catch (err) {
+        console.error("Error deleting user:", err)
+        alert("Error deleting user")
+      }
+    }
+  }
+
+  // Format date
+  const formatDate = (dateString) => {
+    if (!dateString) return "N/A"
+    return new Date(dateString).toLocaleDateString("es-ES", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    })
+  }
+
+  // Redirect if not authenticated
+  if (!isAuthenticated) {
+    return (
+      <div className="max-w-7xl mx-auto p-6">
+        <div className="bg-red-50 border border-red-200 rounded-md p-4">
+          <div className="text-red-800">
+            <strong>Error:</strong> You must be logged in to access the admin panel.
+          </div>
+        </div>
+      </div>
+    )
+  }
 
   return (
-    <div className="max-w-7xl mx-auto p-6 space-y-6">
-      {/* Encabezado */}
+    <div className="max-w-7xl mx-auto p-6 space-y-8">
+      {/* Header */}
       <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold text-gray-900">Panel de Administración</h1>
-        <button 
+        <h1 className="text-3xl font-bold text-gray-900">Admin Panel</h1>
+        <button
           className="px-4 py-2 bg-gray-100 text-gray-700 rounded hover:bg-gray-200"
-          onClick={() => window.location.reload()}
+          onClick={() => {
+            window.location.reload()
+          }}
         >
-          Actualizar
+          Refresh
         </button>
       </div>
 
-      {/* Mensaje de error si existe */}
+      {/* Error message if present */}
       {error && (
         <div className="bg-red-50 border border-red-200 rounded-md p-4">
           <div className="text-red-800">
@@ -101,13 +196,13 @@ function AdminPage() {
         </div>
       )}
 
-      {/* Tarjetas de estadísticas */}
+      {/* Statistic cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        {/* Tarjeta: Total Usuarios */}
+        {/* Card: Total Users */}
         <div className="bg-white p-6 rounded-lg shadow">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600">Total Usuarios</p>
+              <p className="text-sm font-medium text-gray-600">Total Users</p>
               {loading ? (
                 <div className="h-8 bg-gray-200 rounded animate-pulse"></div>
               ) : (
@@ -118,11 +213,11 @@ function AdminPage() {
           </div>
         </div>
 
-        {/* Tarjeta: Total Problemas */}
+        {/* Card: Total Problems */}
         <div className="bg-white p-6 rounded-lg shadow">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600">Total Problemas</p>
+              <p className="text-sm font-medium text-gray-600">Total Problems</p>
               {loading ? (
                 <div className="h-8 bg-gray-200 rounded animate-pulse"></div>
               ) : (
@@ -133,11 +228,11 @@ function AdminPage() {
           </div>
         </div>
 
-        {/* Tarjeta: Total Envíos */}
+        {/* Card: Total Submissions */}
         <div className="bg-white p-6 rounded-lg shadow">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600">Total Envíos</p>
+              <p className="text-sm font-medium text-gray-600">Total Submissions</p>
               {loading ? (
                 <div className="h-8 bg-gray-200 rounded animate-pulse"></div>
               ) : (
@@ -148,11 +243,11 @@ function AdminPage() {
           </div>
         </div>
 
-        {/* Tarjeta: Usuarios Activos */}
+        {/* Card: Active Users */}
         <div className="bg-white p-6 rounded-lg shadow">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600">Usuarios Activos</p>
+              <p className="text-sm font-medium text-gray-600">Active Users</p>
               {loading ? (
                 <div className="h-8 bg-gray-200 rounded animate-pulse"></div>
               ) : (
@@ -163,8 +258,124 @@ function AdminPage() {
           </div>
         </div>
       </div>
-      
-      {/* Aquí irá el resto del contenido del panel */}
+
+      {/* User Management Section */}
+      <div>
+        <h2 className="text-xl font-semibold text-gray-900 mb-4">User Management</h2>
+
+        {/* Users Error message if present */}
+        {usersError && (
+          <div className="bg-red-50 border border-red-200 rounded-md p-4 mb-4">
+            <div className="text-red-800">
+              <strong>Error:</strong> {usersError}
+            </div>
+          </div>
+        )}
+
+        {/* Search bar */}
+        <div className="mb-4">
+          <input
+            type="text"
+            placeholder="Search users..."
+            value={searchTerm}
+            onChange={handleSearch}
+            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+
+        {/* Users table */}
+        <div className="overflow-x-auto bg-white rounded-lg shadow">
+          <table className="min-w-full divide-y divide-gray-200">
+            <thead className="bg-gray-50">
+              <tr>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Username
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Email
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Status
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Problems
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Date
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Actions
+                </th>
+              </tr>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {usersLoading ? (
+                <tr>
+                  <td colSpan="7" className="px-6 py-4 text-center">
+                    <div className="flex justify-center">
+                      <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
+                    </div>
+                  </td>
+                </tr>
+              ) : filteredUsers.length === 0 ? (
+                <tr>
+                  <td colSpan="7" className="px-6 py-4 text-center text-gray-500">
+                    No users found
+                  </td>
+                </tr>
+              ) : (
+                filteredUsers.map((user) => (
+                  <tr key={user.codUser} className="hover:bg-gray-50">
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-sm font-medium text-gray-900">{user.username}</div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-sm text-gray-900">{user.email}</div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <span
+                        className={`px-3 py-1 text-xs font-semibold rounded-full ${getRoleColor(user.rolUsuario?.name)}`}
+                      >
+                        {formatRoleName(user.rolUsuario?.name)}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <span
+                        className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${user.isActive ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"
+                          }`}
+                      >
+                        {user.isActive ? "Active" : "Inactive"}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      {user.totalProblemsSolved || 0}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{formatDate(user.createdAt)}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
+                      <button
+                        onClick={() => handleStatusToggle(user.codUser, user.isActive)}
+                        className={`px-3 py-1 rounded text-xs ${user.isActive
+                          ? "bg-red-100 text-red-700 hover:bg-red-200"
+                          : "bg-green-100 text-green-700 hover:bg-green-200"
+                          }`}
+                      >
+                        {user.isActive ? "Deactivate" : "Activate"}
+                      </button>
+                      <button
+                        onClick={() => handleDeleteUser(user.codUser)}
+                        className="px-3 py-1 bg-red-100 text-red-700 hover:bg-red-200 rounded text-xs"
+                      >
+                        Remove
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   )
 }

@@ -16,7 +16,7 @@ function HomePage() {
   return (
     <div className="text-center">
       <h1 className="text-4xl font-bold text-gray-900 mt-10 mb-6">
-        Welcome to the Virtual Judge, {username}
+        Welcome to the Virtual Judge. {username}
       </h1>
 
       <p className="text-xl text-gray-600 mb-8">
