@@ -25,7 +25,7 @@ function ProblemDetailPage() {
     } catch (err) {
       console.error("Error fetching problem:", err);
       setError(
-        "Error al cargar el problema. Por favor, intenta de nuevo más tarde."
+        "Error loading problem. Please try again later."
       );
     } finally {
       setLoading(false);
@@ -34,7 +34,7 @@ function ProblemDetailPage() {
 
   const handleDelete = async () => {
     if (
-      window.confirm("¿Estás seguro de que quieres eliminar este problema?")
+      window.confirm("Are you sure you want to delete this problem?")
     ) {
       try {
         await deleteProblem(id);
@@ -42,7 +42,7 @@ function ProblemDetailPage() {
       } catch (err) {
         console.error("Error deleting problem:", err);
         alert(
-          "Error al eliminar el problema. Por favor, intenta de nuevo más tarde."
+          "Error while deleting the problem. Please try again later."
         );
       }
     }
@@ -51,7 +51,7 @@ function ProblemDetailPage() {
   if (loading) {
     return (
       <div className="text-center py-10">
-        <p className="text-gray-500">Cargando problema...</p>
+        <p className="text-gray-500">Loading problem...</p>
       </div>
     );
   }
@@ -67,7 +67,7 @@ function ProblemDetailPage() {
   if (!problem) {
     return (
       <div className="text-center py-10">
-        <p className="text-gray-500">Problema no encontrado.</p>
+        <p className="text-gray-500">Problem not found.</p>
       </div>
     );
   }
@@ -84,13 +84,13 @@ function ProblemDetailPage() {
                 to={`/problems/edit/${id}`}
                 className="bg-gray-600 hover:bg-gray-700 text-white text-sm font-medium py-2 px-4 rounded"
               >
-                Editar
+                Edit
               </Link>
               <button
                 onClick={handleDelete}
                 className="bg-red-600 hover:bg-red-700 text-white text-sm font-medium py-2 px-4 rounded"
               >
-                Eliminar
+                Delete
               </button>
             </div>
           )}
@@ -120,22 +120,22 @@ function ProblemDetailPage() {
                 : "bg-gray-100 text-gray-800"
             }`}
           >
-            {problem.isPublic ? "Público" : "Privado"}
+            {problem.isPublic ? "Public" : "Private"}
           </span>
         </div>
 
         <div className="mb-6">
-          <h2 className="text-lg font-semibold mb-2">Descripción</h2>
+          <h2 className="text-lg font-semibold mb-2">Description</h2>
           <p className="text-gray-700">{problem.description}</p>
         </div>
 
         <div className="grid md:grid-cols-2 gap-4 mb-6">
           <div>
-            <h2 className="text-lg font-semibold mb-2">Formato de entrada</h2>
+            <h2 className="text-lg font-semibold mb-2">Input format</h2>
             <p className="text-gray-700">{problem.inputFormat}</p>
           </div>
           <div>
-            <h2 className="text-lg font-semibold mb-2">Formato de salida</h2>
+            <h2 className="text-lg font-semibold mb-2">Output format</h2>
             <p className="text-gray-700">{problem.outputFormat}</p>
           </div>
 
@@ -150,20 +150,20 @@ function ProblemDetailPage() {
 
         {problem.testCases && problem.testCases.some((tc) => tc.isSample) && (
           <div className="mb-6">
-            <h2 className="text-lg font-semibold mb-2">Ejemplos</h2>
+            <h2 className="text-lg font-semibold mb-2">Examples</h2>
             <div className="space-y-4">
               {problem.testCases
                 .filter((tc) => tc.isSample)
                 .map((testCase, index) => (
                   <div key={index} className="grid grid-cols-2 gap-4">
                     <div className="bg-gray-50 p-3 rounded">
-                      <h3 className="text-sm font-medium mb-1">Entrada</h3>
+                      <h3 className="text-sm font-medium mb-1">Input</h3>
                       <pre className="text-sm whitespace-pre-wrap">
                         {testCase.input}
                       </pre>
                     </div>
                     <div className="bg-gray-50 p-3 rounded">
-                      <h3 className="text-sm font-medium mb-1">Salida</h3>
+                      <h3 className="text-sm font-medium mb-1">Output</h3>
                       <pre className="text-sm whitespace-pre-wrap">
                         {testCase.expectedOutput}
                       </pre>
@@ -177,7 +177,7 @@ function ProblemDetailPage() {
         <div>
           {isAuthenticated && (
             <button className="text-white">
-              <Link to={`/problems/${id}/submit`}>Resolver este problema</Link>
+              <Link to={`/problems/${id}/submit`}>Solve this problem</Link>
             </button>
           )}
         </div>

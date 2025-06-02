@@ -15,7 +15,7 @@ function ProblemListPage() {
       const data = await fetchProblems();
       setProblems(data);
     } catch (error) {
-      console.error("Error al cargar problemas:", error);
+      console.error("Error loading problems:", error);
     } finally {
       setLoading(false);
     }
@@ -23,18 +23,18 @@ function ProblemListPage() {
 
   useEffect(() => {
     loadProblems();
-  }, [loadProblems]);
+  }, [loadProblems]); // ✅ Dependencia agregada correctamente
 
   return (
     <div className="max-w-7xl mx-auto p-6 space-y-6">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold text-gray-900">Problemas</h1>
+        <h1 className="text-3xl font-bold text-gray-900">Problems</h1>
         {isAuthenticated && isAdmin() && (
           <Link
             to="/problems/create"
             className="bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium py-2 px-4 rounded"
           >
-            Crear Problema
+            Create Problem
           </Link>
         )}
       </div>
@@ -49,16 +49,16 @@ function ProblemListPage() {
             <thead className="bg-gray-50">
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Título
+                  Title
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Dificultad
+                  Difficulty
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Etiquetas
+                  Tags
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Acciones
+                  Actions
                 </th>
               </tr>
             </thead>
@@ -100,19 +100,20 @@ function ProblemListPage() {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm">
                     <div className="flex space-x-2">
+                      {/* Enlace "Resolver" con verificación de autenticación */}
                       {isAuthenticated ? (
                         <Link
                           to={`/problems/${problem.codProblem}/submit`}
                           className="text-blue-600 hover:text-blue-900"
                         >
-                          Resolver
+                          Resolve
                         </Link>
                       ) : (
                         <Link
                           to="/login"
                           className="text-blue-600 hover:text-blue-900"
                         >
-                          Resolver
+                          Resolve
                         </Link>
                       )}
 
@@ -121,7 +122,7 @@ function ProblemListPage() {
                           to={`/problems/edit/${problem.codProblem}`}
                           className="text-gray-600 hover:text-gray-900"
                         >
-                          Editar
+                          Edit
                         </Link>
                       )}
                     </div>

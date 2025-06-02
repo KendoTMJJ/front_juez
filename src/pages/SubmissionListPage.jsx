@@ -15,7 +15,7 @@ function SubmissionListPage() {
   const [processedProblems, setProcessedProblems] = useState(new Set());
 
   useEffect(() => {
-    if (!userId) return; // No hay usuario autenticado
+     return; // No authenticated user
     fetchSubmissions();
   }, [userId, problemId]);
 
@@ -25,10 +25,10 @@ function SubmissionListPage() {
       const data = await getAllSubmissions({ problemId, userId });
 
       if (!Array.isArray(data)) {
-        throw new Error("Formato de datos inválido");
+        throw new Error("Invalid data format");
       }
 
-      // Identificar nuevos problemas aceptados
+      // Identify new accepted problems
       const newAccepted = data.filter(
         (sub) =>
           sub.status.toLowerCase() === "accepted" &&
@@ -36,7 +36,7 @@ function SubmissionListPage() {
           !processedProblems.has(sub.problem.codProblem)
       );
 
-      // Actualizar backend para cada nuevo problema aceptado
+      // Update backend for each new accepted problem
       if (newAccepted.length > 0) {
         const uniqueNewProblems = [
           ...new Set(newAccepted.map((s) => s.problem.codProblem)),
@@ -57,8 +57,8 @@ function SubmissionListPage() {
       setSubmissions(data);
       setError(null);
     } catch (err) {
-      console.error("Error al obtener submissions:", err);
-      setError("Error al cargar los envíos");
+      console.error("Error getting submissions:", err);
+      setError("Error loading submissions");
     } finally {
       setLoading(false);
     }
@@ -93,16 +93,16 @@ function SubmissionListPage() {
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold text-gray-900">
           {problemId
-            ? "Envíos para este problema"
+            ? "Submissions for this Problem"
             : userId
-            ? "Mis envíos"
-            : "Todos los envíos"}
+            ? "My submissions"
+            : "All submissions"}
         </h1>
       </div>
 
       {loading ? (
         <div className="text-center py-10">
-          <p className="text-gray-500">Cargando envíos...</p>
+          <p className="text-gray-500">Loading submissions...</p>
         </div>
       ) : error ? (
         <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
@@ -110,7 +110,7 @@ function SubmissionListPage() {
         </div>
       ) : submissions.length === 0 ? (
         <div className="text-center py-10">
-          <p className="text-gray-500">No hay envíos disponibles.</p>
+          <p className="text-gray-500">there are not submissions available.</p>
         </div>
       ) : (
         <div className="bg-white shadow overflow-hidden rounded-lg">
@@ -121,22 +121,22 @@ function SubmissionListPage() {
                   ID
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Problema
+                  Problem
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Estado
+                  State
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Lenguaje
+                  Language
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Tiempo
+                  Time
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Memoria
+                  Memory
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Fecha
+                  Date
                 </th>
               </tr>
             </thead>
@@ -148,7 +148,7 @@ function SubmissionListPage() {
                       to={`/submissions/${submission.codSubmission}`}
                       className="text-blue-600 hover:text-blue-900"
                     >
-                      Solución
+                      Solution
                     </Link>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">

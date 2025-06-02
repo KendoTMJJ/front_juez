@@ -14,7 +14,7 @@ function RankingsPage() {
         setRankings(data);
         setError(null);
       } catch (err) {
-        setError("Error al cargar el ranking");
+        setError("Error loading ranking");
         console.error(err);
       } finally {
         setLoading(false);
@@ -27,11 +27,10 @@ function RankingsPage() {
   return (
     <div className="max-w-7xl mx-auto p-6 space-y-6">
       <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">
-        Clasificación
+        Classification
       </h1>
       <p className="text-lg text-gray-600 dark:text-gray-300 mb-8">
-        Los mejores programadores basados en problemas resueltos y puntuación
-        total.
+        The best programmers based on solved problems and total score.
       </p>
 
       {loading ? (
@@ -48,16 +47,16 @@ function RankingsPage() {
             <thead className="bg-gray-50 dark:bg-gray-700">
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                  Posición
+                  Position
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                  Usuario
+                  User
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                  Problemas Resueltos
+                  solved Problems
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                  Puntuación Total
+                  Total Score
                 </th>
               </tr>
             </thead>

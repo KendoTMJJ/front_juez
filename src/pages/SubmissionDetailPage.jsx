@@ -21,7 +21,7 @@ function SubmissionDetailPage() {
     } catch (err) {
       console.error("Error fetching submission:", err);
       setError(
-        "Error al cargar el envío. Por favor, intenta de nuevo más tarde."
+        "Error loading submission. Please try again later."
       );
     } finally {
       setLoading(false);
@@ -55,7 +55,7 @@ function SubmissionDetailPage() {
   if (loading) {
     return (
       <div className="text-center py-10">
-        <p className="text-gray-500">Cargando envío...</p>
+        <p className="text-gray-500">Loading submission...</p>
       </div>
     );
   }
@@ -71,7 +71,7 @@ function SubmissionDetailPage() {
   if (!submission) {
     return (
       <div className="text-center py-10">
-        <p className="text-gray-500">Envío no encontrado.</p>
+        <p className="text-gray-500">Submission not found.</p>
       </div>
     );
   }
@@ -81,15 +81,15 @@ function SubmissionDetailPage() {
       <div className="p-6">
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-2xl font-bold text-gray-900">
-            {/* Envío: {submission.codSubmission.substring(0, 8)}... */}
-            Envío
+            {/* Submission: {submission.codSubmission.substring(0, 8)}... */}
+            Submission
           </h1>
           {getStatusBadge(submission.status)}
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
           <div>
-            <h2 className="text-sm font-medium text-gray-500">Problema</h2>
+            <h2 className="text-sm font-medium text-gray-500">Problem</h2>
             {submission.problem ? (
               <Link
                 to={`/problems/${submission.problem.codProblem}`}
@@ -102,12 +102,12 @@ function SubmissionDetailPage() {
             )}
           </div>
           <div>
-            <h2 className="text-sm font-medium text-gray-500">Lenguaje</h2>
+            <h2 className="text-sm font-medium text-gray-500">Language</h2>
             <p>{submission.language}</p>
           </div>
           <div>
             <h2 className="text-sm font-medium text-gray-500">
-              Tiempo de ejecución
+              Execution Time
             </h2>
             <p>
               {submission.executionTime
@@ -117,14 +117,14 @@ function SubmissionDetailPage() {
           </div>
           <div>
             <h2 className="text-sm font-medium text-gray-500">
-              Memoria utilizada
+              Memory Used
             </h2>
             <p>
               {submission.memoryUsage ? `${submission.memoryUsage} KB` : "N/A"}
             </p>
           </div>
           <div>
-            <h2 className="text-sm font-medium text-gray-500">Puntuación</h2>
+            <h2 className="text-sm font-medium text-gray-500">Score</h2>
             <p>
               {submission.score !== undefined
                 ? `${submission.score}/100`
@@ -133,7 +133,7 @@ function SubmissionDetailPage() {
           </div>
           <div>
             <h2 className="text-sm font-medium text-gray-500">
-              Fecha de envío
+              Submission Date
             </h2>
             <p>
               {submission.submittedAt
@@ -144,7 +144,7 @@ function SubmissionDetailPage() {
         </div>
 
         <div className="mb-6">
-          <h2 className="text-lg font-semibold mb-2">Código fuente</h2>
+          <h2 className="text-lg font-semibold mb-2">Source Code</h2>
           <pre className="bg-gray-50 p-4 rounded overflow-x-auto text-sm font-mono">
             {submission.sourceCode}
           </pre>
@@ -153,26 +153,26 @@ function SubmissionDetailPage() {
         {submission.result?.testResults && (
           <div>
             <h2 className="text-lg font-semibold mb-2">
-              Resultados de casos de prueba
+              Test Case Results
             </h2>
             <div className="overflow-x-auto">
               <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-50">
                   <tr>
                     <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Caso
+                      Case
                     </th>
                     <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Estado
+                      Status
                     </th>
                     <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Tiempo
+                      Time
                     </th>
                     <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Memoria
+                      Memory
                     </th>
                     <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Salida
+                      Output
                     </th>
                   </tr>
                 </thead>
@@ -180,7 +180,7 @@ function SubmissionDetailPage() {
                   {submission.result.testResults.map((result, index) => (
                     <tr key={index}>
                       <td className="px-4 py-2 whitespace-nowrap text-sm">
-                        Caso {index + 1}
+                        Case {index + 1}
                       </td>
                       <td className="px-4 py-2 whitespace-nowrap text-sm">
                         {getStatusBadge(result.status)}
@@ -195,7 +195,7 @@ function SubmissionDetailPage() {
                         {result.stdout && (
                           <div className="mb-2">
                             <h3 className="text-xs font-medium text-gray-500">
-                              Salida estándar:
+                              Standard Output:
                             </h3>
                             <pre className="text-xs bg-gray-50 p-1 rounded">
                               {result.stdout}
@@ -205,7 +205,7 @@ function SubmissionDetailPage() {
                         {result.stderr && (
                           <div className="mb-2">
                             <h3 className="text-xs font-medium text-gray-500">
-                              Error estándar:
+                              Standard Error:
                             </h3>
                             <pre className="text-xs bg-gray-50 p-1 rounded">
                               {result.stderr}
@@ -215,7 +215,7 @@ function SubmissionDetailPage() {
                         {result.compileOutput && (
                           <div>
                             <h3 className="text-xs font-medium text-gray-500">
-                              Salida de compilación:
+                              Compile Output:
                             </h3>
                             <pre className="text-xs bg-gray-50 p-1 rounded">
                               {result.compileOutput}
@@ -237,14 +237,14 @@ function SubmissionDetailPage() {
               to={`/problems/${submission.problem.codProblem}/submit`}
               className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded"
             >
-              Intentar de nuevo
+              Try Again
             </Link>
           )}
           <Link
             to="/submissions"
             className="bg-gray-600 hover:bg-gray-700 text-white py-2 px-4 rounded"
           >
-            Ver todos los envíos
+            View All Submissions
           </Link>
         </div>
       </div>

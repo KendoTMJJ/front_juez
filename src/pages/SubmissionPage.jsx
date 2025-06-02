@@ -19,9 +19,9 @@ function SubmissionPage() {
         setProblem(data);
         setError(null);
       } catch (err) {
-        console.error("Error al cargar el problema:", err);
+        console.error("Error loading problem:", err);
         setError(
-          "Error al cargar el problema. Por favor, intenta de nuevo más tarde."
+          "Error loading problem. Please try again later."
         );
       } finally {
         setLoading(false);
@@ -36,15 +36,15 @@ function SubmissionPage() {
       const result = await createSubmission(submission);
       navigate(`/submissions/${result.codSubmission}`);
     } catch (err) {
-      console.error("Error al enviar la solución:", err);
-      alert("Hubo un problema al enviar la solución. Inténtalo nuevamente.");
+      console.error("Error submitting solution:", err);
+      alert("There was a problem submitting the solution. Please try again.");
     }
   };
 
   if (loading) {
     return (
       <div className="text-center py-10">
-        <p className="text-gray-500">Cargando problema...</p>
+        <p className="text-gray-500">Loading problem...</p>
       </div>
     );
   }
@@ -60,7 +60,7 @@ function SubmissionPage() {
   if (!problem) {
     return (
       <div className="text-center py-10">
-        <p className="text-gray-500">Problema no encontrado.</p>
+        <p className="text-gray-500">Problem not found.</p>
       </div>
     );
   }
