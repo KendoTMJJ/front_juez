@@ -2,9 +2,6 @@ import { Editor } from "@monaco-editor/react";
 import { useState, useRef } from "react";
 import { format } from "prettier";
 import parserBabel from "prettier/parser-babel";
-import parserHtml from "prettier/parser-html";
-import parserPostcss from "prettier/parser-postcss";
-import parserTypescript from "prettier/parser-typescript";
 
 /**
  * Component for submitting code solutions to problems
