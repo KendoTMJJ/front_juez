@@ -1,8 +1,7 @@
-"use client";
-
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { findProbleById, updateProblem } from "../services/apiProblem";
 
 function EditProblemPage() {
   const { id } = useParams();
@@ -38,21 +37,24 @@ function EditProblemPage() {
   const fetchProblem = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(
-        `http://localhost:3213/api/problems/findOne/${id}`
-      );
+      const problemData = await findProbleById(id);
 
-      // make sure that the contraints, tags, and testCases are arrays
+      if (!problemData) {
+        throw new Error("El problema no existe o no se pudo cargar");
+      }
+
       const problem = {
-        ...response.data,
-        constraints: Array.isArray(response.data.constraints)
-          ? response.data.constraints
+        ...problemData,
+        constraints: Array.isArray(problemData.constraints)
+          ? problemData.constraints.filter((c) => c && c.trim() !== "")
           : [""],
-        tags: Array.isArray(response.data.tags) ? response.data.tags : [""],
+        tags: Array.isArray(problemData.tags)
+          ? problemData.tags.filter((t) => t && t.trim() !== "")
+          : [""],
         testCases:
-          Array.isArray(response.data.testCases) &&
-          response.data.testCases.length > 0
-            ? response.data.testCases
+          Array.isArray(problemData.testCases) &&
+          problemData.testCases.length > 0
+            ? problemData.testCases
             : [
                 {
                   input: "",
@@ -67,9 +69,7 @@ function EditProblemPage() {
       setError(null);
     } catch (err) {
       console.error("Error fetching problem:", err);
-      setError(
-        "An error occurred while loading the problem. Please try again later."
-      );
+      setError(err.message || "Error al cargar el problema");
     } finally {
       setLoading(false);
     }
@@ -182,34 +182,44 @@ function EditProblemPage() {
       0
     );
     if (totalScore !== 100) {
-      alert(
-        `The sum of scores must be 100. Currently it is ${totalScore}.`
-      );
+      alert(`The sum of scores must be 100. Currently it is ${totalScore}.`);
       return;
     }
 
     try {
       setSubmitting(true);
 
-      // Filter empty tags and constraints
-      const cleanedData = {
-        ...formData,
+      // Create payload with only the fields the server expects
+      const payload = {
+        title: formData.title,
+        description: formData.description,
+        inputFormat: formData.inputFormat,
+        outputFormat: formData.outputFormat,
+        constraints: formData.constraints.filter((c) => c.trim() !== ""),
+        timeLimit: Number(formData.timeLimit),
+        memoryLimit: Number(formData.memoryLimit),
+        difficulty: formData.difficulty,
+        isPublic: formData.isPublic,
         tags: formData.tags.filter((tag) => tag.trim() !== ""),
-        constraints: formData.constraints.filter(
-          (constraint) => constraint.trim() !== ""
-        ),
+        testCases: formData.testCases.map((tc) => ({
+          input: tc.input,
+          expectedOutput: tc.expectedOutput,
+          isSample: tc.isSample,
+          score: Number(tc.score),
+        })),
       };
 
-      await axios.patch(
-        `http://localhost:3213/api/problems/update/${id}`,
-        cleanedData
-      );
+      console.log("Submitting payload:", payload); // Debug log
+      await updateProblem(id, payload);
       navigate(`/problems/${id}`);
     } catch (err) {
       console.error("Error updating problem:", err);
-      alert(
-        "An error occurred while updating the problem. Please try again later."
-      );
+      if (err.response) {
+        // Show server's error message if available
+        alert(`Error: ${err.response.data.message || err.message}`);
+      } else {
+        alert("An error occurred while updating the problem.");
+      }
     } finally {
       setSubmitting(false);
     }
@@ -234,9 +244,7 @@ function EditProblemPage() {
   return (
     <div className="bg-white shadow-md rounded-lg overflow-hidden">
       <div className="p-6">
-        <h1 className="text-2xl font-bold text-gray-900 mb-6">
-          Edit Problem
-        </h1>
+        <h1 className="text-2xl font-bold text-gray-900 mb-6">Edit Problem</h1>
 
         <form onSubmit={handleSubmit}>
           <div className="grid grid-cols-1 gap-6">

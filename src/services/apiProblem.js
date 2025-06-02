@@ -1,150 +1,76 @@
+// src/services/apiProblem.js
+import axios from "axios";
+
+// Base URL from environment variables
 const BACKEND_URL = import.meta.env.VITE_JUEZ_URL;
 
-// Función auxiliar para obtener el token de autenticación
-const getAuthToken = () => {
-    return localStorage.getItem("authToken")
-}
+// Create Axios instance with base configuration
+const api = axios.create({
+  baseURL: BACKEND_URL,
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
 
-// Función auxiliar para crear headers con autenticación
-const getAuthHeaders = () => {
-    const token = getAuthToken()
-    return {
-      "Content-Type": "application/json",
-      Authorization: token ? `Bearer ${token}` : "",
-    }
+// Add request interceptor to automatically include auth token
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem("authToken");
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
   }
+  return config;
+});
 
+// ✅ Get all problems (correct route according to Swagger)
+export const fetchProblems = async () => {
+  const response = await api.get("/api/problems/");
+  return response.data;
+};
 
-// Mostrar todos los problemas
-export async function fetchProblems() {
-    const response = await fetch(`${BACKEND_URL}/api/problems/all`, {
-      headers: getAuthHeaders(),
-    })
-  
-    if (!response.ok) {
-      throw new Error("Problemas al obtener los datos")
-    }
-  
-    return await response.json()
-  }
+// Get a single problem by ID
+export const findProbleById = async (id) => {
+  const response = await api.get(`/api/problems/${id}`);
+  return response.data;
+};
 
-// Mostrar un problema según el id
-export async function findProbleById(id) {
-    const response = await fetch(`${BACKEND_URL}/api/problems/findOne/${id}`, {
-      headers: getAuthHeaders(),
-    })
-  
-    if (!response.ok) {
-      throw new Error(`Problema no encontrado con ID: ${id}`)
-    }
-  
-    return await response.json()
-  }
+// Create a new problem
+export const createProblem = async (problem) => {
+  const response = await api.post("/api/problems", problem);
+  return response.data;
+};
 
+// Update an existing problem
+export const updateProblem = async (id, problem) => {
+  const response = await api.patch(`/api/problems/${id}`, problem);
+  return response.data;
+};
 
-// Crear un nuevo problema
-export async function createProblem(problem) {
-    const response = await fetch(`${BACKEND_URL}/api/problems/create`, {
-      method: "POST",
-      headers: getAuthHeaders(),
-      body: JSON.stringify(problem),
-    })
-  
-    if (!response.ok) {
-      throw new Error("Problemas al crear el problema")
-    }
-  
-    return await response.json()
-  }
+// Delete a problem
+export const deleteProblem = async (id) => {
+  const response = await api.delete(`/api/problems/${id}`);
+  return response.data;
+};
 
+// Get problems by difficulty level
+export const fetchProblemsByDifficulty = async (difficulty) => {
+  const response = await api.get(`/api/problems/difficulty/${difficulty}`);
+  return response.data;
+};
 
-// Actualizar un problema existente
-export async function updateProblem(id, problem) {
-    const response = await fetch(`${BACKEND_URL}/api/problems/update/${id}`, {
-      method: "PATCH",
-      headers: getAuthHeaders(),
-      body: JSON.stringify(problem),
-    })
-  
-    if (!response.ok) {
-      throw new Error(`Problemas al actualizar el problema con ID: ${id}`)
-    }
-  
-    return await response.json()
-  }
+// Get problems by category
+export const fetchProblemsByCategory = async (category) => {
+  const response = await api.get(`/api/problems/category/${category}`);
+  return response.data;
+};
 
-  export async function deleteProblem(id) {
-    const response = await fetch(`${BACKEND_URL}/api/problems/${id}`, {
-      method: "DELETE",
-      headers: getAuthHeaders(),
-    });
-  
-    if (!response.ok) {
-      throw new Error(`Problemas al eliminar el problema con ID: ${id}`);
-    }
-  
-    // Si no hay contenido (204), no intentes hacer .json()
-    if (response.status === 204) {
-      return null;
-    }
-  
-    // Si sí hay contenido, parsea como JSON
-    const contentType = response.headers.get("content-type");
-    if (contentType && contentType.includes("application/json")) {
-      return await response.json();
-    }
-  
-    return null;
-  }
+// Get problems solved by current user
+export const fetchSolvedProblems = async () => {
+  const response = await api.get("/api/problems/solved");
+  return response.data;
+};
 
-// Obtener problemas por dificultad
-export async function fetchProblemsByDifficulty(difficulty) {
-    const response = await fetch(`${BACKEND_URL}/api/problems/difficulty/${difficulty}`, {
-      headers: getAuthHeaders(),
-    })
-  
-    if (!response.ok) {
-      throw new Error(`Problemas al obtener problemas con dificultad: ${difficulty}`)
-    }
-  
-    return await response.json()
-  }
-  
-  // Obtener problemas por categoría
-  export async function fetchProblemsByCategory(category) {
-    const response = await fetch(`${BACKEND_URL}/api/problems/category/${category}`, {
-      headers: getAuthHeaders(),
-    })
-  
-    if (!response.ok) {
-      throw new Error(`Problemas al obtener problemas de la categoría: ${category}`)
-    }
-  
-    return await response.json()
-  }
-  
-  // Obtener problemas resueltos por el usuario actual
-  export async function fetchSolvedProblems() {
-    const response = await fetch(`${BACKEND_URL}/api/problems/solved`, {
-      headers: getAuthHeaders(),
-    })
-  
-    if (!response.ok) {
-      throw new Error("Problemas al obtener los problemas resueltos")
-    }
-  
-    return await response.json()
-  }
-  
-  // Obtener problemas no resueltos por el usuario actual
-  export async function fetchUnsolvedProblems() {
-    const response = await fetch(`${BACKEND_URL}/api/problems/unsolved`, {
-      headers: getAuthHeaders(),
-    })
-  
-    if (!response.ok) {
-      throw new Error("Problemas al obtener los problemas no resueltos")
-    }
-  
-    return await response.json()
-  }
+// Get problems not solved by current user
+export const fetchUnsolvedProblems = async () => {
+  const response = await api.get("/api/problems/unsolved");
+  return response.data;
+};

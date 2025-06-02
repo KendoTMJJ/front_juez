@@ -23,7 +23,7 @@ function ProblemListPage() {
 
   useEffect(() => {
     loadProblems();
-  }, [loadProblems]); // ✅ Dependencia agregada correctamente
+  }, [loadProblems]);
 
   return (
     <div className="max-w-7xl mx-auto p-6 space-y-6">
@@ -57,7 +57,6 @@ function ProblemListPage() {
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Etiquetas
                 </th>
-
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Acciones
                 </th>
@@ -99,10 +98,8 @@ function ProblemListPage() {
                       ))}
                     </div>
                   </td>
-
                   <td className="px-6 py-4 whitespace-nowrap text-sm">
                     <div className="flex space-x-2">
-                      {/* Enlace "Resolver" con verificación de autenticación */}
                       {isAuthenticated ? (
                         <Link
                           to={`/problems/${problem.codProblem}/submit`}
@@ -122,7 +119,7 @@ function ProblemListPage() {
                       {isAuthenticated && isAdmin() && (
                         <Link
                           to={`/problems/edit/${problem.codProblem}`}
-                          className="text-gray-600 hover:text -gray-900"
+                          className="text-gray-600 hover:text-gray-900"
                         >
                           Editar
                         </Link>
