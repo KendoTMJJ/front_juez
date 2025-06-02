@@ -14,12 +14,12 @@ export function Footer() {
               className="flex items-center cursor-pointer"
               onClick={() => navigate("/")}
             >
-              <span className="text-3xl font-bold text-white">Juez</span>
-              <span className="text-3xl font-bold text-blue-400">Virtual</span>
+              <span className="text-3xl font-bold text-white">Virtual</span>
+              <span className="text-3xl font-bold text-blue-400">Judge</span>
             </div>
             <p className="text-gray-300 leading-relaxed">
-              Plataforma para desarrollar habilidades de programación mediante
-              desafíos algorítmicos y problemas del mundo real.
+              A platform to develop programming skills through algorithmic
+              challenges and real-world problems.
             </p>
             <div className="flex space-x-4">
               <a
@@ -58,7 +58,7 @@ export function Footer() {
           {/* Quick Links */}
           <div className="space-y-6">
             <h3 className="text-lg font-bold text-blue-400 uppercase tracking-wider">
-              Enlaces Rápidos
+              Quick Links
             </h3>
             <ul className="space-y-3">
               <li>
@@ -67,7 +67,7 @@ export function Footer() {
                   className="text-gray-300 hover:text-white transition-colors flex items-center"
                 >
                   <span className="w-2 h-2 bg-blue-400 rounded-full mr-2"></span>
-                  Problemas
+                  Problems
                 </Link>
               </li>
               <li>
@@ -76,7 +76,7 @@ export function Footer() {
                   className="text-gray-300 hover:text-white transition-colors flex items-center"
                 >
                   <span className="w-2 h-2 bg-blue-400 rounded-full mr-2"></span>
-                  Clasificaciones
+                  Rankings
                 </Link>
               </li>
               <li>
@@ -85,7 +85,7 @@ export function Footer() {
                   className="text-gray-300 hover:text-white transition-colors flex items-center"
                 >
                   <span className="w-2 h-2 bg-blue-400 rounded-full mr-2"></span>
-                  Concursos
+                  Contests
                 </Link>
               </li>
               <li>
@@ -103,7 +103,7 @@ export function Footer() {
           {/* Resources */}
           <div className="space-y-6">
             <h3 className="text-lg font-bold text-blue-400 uppercase tracking-wider">
-              Recursos
+              Resources
             </h3>
             <ul className="space-y-3">
               <li>
@@ -112,7 +112,7 @@ export function Footer() {
                   className="text-gray-300 hover:text-white transition-colors flex items-center"
                 >
                   <span className="w-2 h-2 bg-blue-400 rounded-full mr-2"></span>
-                  Documentación
+                  Documentation
                 </a>
               </li>
               <li>
@@ -121,7 +121,7 @@ export function Footer() {
                   className="text-gray-300 hover:text-white transition-colors flex items-center"
                 >
                   <span className="w-2 h-2 bg-blue-400 rounded-full mr-2"></span>
-                  Tutoriales
+                  Tutorials
                 </a>
               </li>
               <li>
@@ -130,7 +130,7 @@ export function Footer() {
                   className="text-gray-300 hover:text-white transition-colors flex items-center"
                 >
                   <span className="w-2 h-2 bg-blue-400 rounded-full mr-2"></span>
-                  Comunidad
+                  Community
                 </a>
               </li>
               <li>
@@ -148,7 +148,7 @@ export function Footer() {
           {/* Contact */}
           <div className="space-y-6">
             <h3 className="text-lg font-bold text-blue-400 uppercase tracking-wider">
-              Contacto
+              Contact
             </h3>
             <address className="text-gray-300 not-italic">
               <div className="flex items-start mb-3">
@@ -222,24 +222,24 @@ export function Footer() {
           </div>
         </div>
 
-        {/* Copyright and Credits */}
+        {/* Copyright */}
         <div className="border-t border-gray-700 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
           <p className="text-gray-400 text-sm mb-4 md:mb-0">
-            &copy; {new Date().getFullYear()} Juez Virtual. Todos los derechos
-            reservados.
+            &copy; {new Date().getFullYear()} Virtual Judge. All rights
+            reserved.
           </p>
           <div className="flex space-x-6">
             <a
               href="#"
               className="text-gray-400 hover:text-white text-sm transition-colors"
             >
-              Términos de servicio
+              Terms of Service
             </a>
             <a
               href="#"
               className="text-gray-400 hover:text-white text-sm transition-colors"
             >
-              Política de privacidad
+              Privacy Policy
             </a>
             <a
               href="#"
