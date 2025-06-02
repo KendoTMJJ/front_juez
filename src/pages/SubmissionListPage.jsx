@@ -15,8 +15,8 @@ function SubmissionListPage() {
   const [processedProblems, setProcessedProblems] = useState(new Set());
 
   useEffect(() => {
-     return; // No authenticated user
-    fetchSubmissions();
+    if (!userId) return;
+    fetchSubmissions(); // No authenticated user
   }, [userId, problemId]);
 
   const fetchSubmissions = async () => {

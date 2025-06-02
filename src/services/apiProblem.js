@@ -1,10 +1,10 @@
 // src/services/apiProblem.js
 import axios from "axios";
 
-// Base URL from environment variables
+// URL base desde las variables de entorno
 const BACKEND_URL = import.meta.env.VITE_JUEZ_URL;
 
-// Create Axios instance with base configuration
+// Crear instancia de Axios
 const api = axios.create({
   baseURL: BACKEND_URL,
   headers: {
@@ -12,7 +12,7 @@ const api = axios.create({
   },
 });
 
-// Add request interceptor to automatically include auth token
+// Agregar interceptor para incluir token automáticamente
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem("authToken");
   if (token) {
@@ -21,55 +21,55 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-// ✅ Get all problems (correct route according to Swagger)
+// ✅ Obtener todos los problemas (ruta correcta según Swagger)
 export const fetchProblems = async () => {
   const response = await api.get("/api/problems/");
   return response.data;
 };
 
-// Get a single problem by ID
+// Obtener un problema por ID
 export const findProbleById = async (id) => {
   const response = await api.get(`/api/problems/${id}`);
   return response.data;
 };
 
-// Create a new problem
+// Crear un nuevo problema
 export const createProblem = async (problem) => {
   const response = await api.post("/api/problems", problem);
   return response.data;
 };
 
-// Update an existing problem
+// Actualizar un problema existente
 export const updateProblem = async (id, problem) => {
   const response = await api.patch(`/api/problems/${id}`, problem);
   return response.data;
 };
 
-// Delete a problem
+// Eliminar un problema
 export const deleteProblem = async (id) => {
   const response = await api.delete(`/api/problems/${id}`);
   return response.data;
 };
 
-// Get problems by difficulty level
+// Obtener problemas por dificultad
 export const fetchProblemsByDifficulty = async (difficulty) => {
   const response = await api.get(`/api/problems/difficulty/${difficulty}`);
   return response.data;
 };
 
-// Get problems by category
+// Obtener problemas por categoría
 export const fetchProblemsByCategory = async (category) => {
   const response = await api.get(`/api/problems/category/${category}`);
   return response.data;
 };
 
-// Get problems solved by current user
+// Obtener problemas resueltos por el usuario actual
 export const fetchSolvedProblems = async () => {
   const response = await api.get("/api/problems/solved");
   return response.data;
 };
 
-// Get problems not solved by current user
+// Obtener problemas no resueltos por el usuario actual
 export const fetchUnsolvedProblems = async () => {
   const response = await api.get("/api/problems/unsolved");
   return response.data;
