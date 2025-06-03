@@ -2,7 +2,7 @@ import axios from "axios";
 
 const BACKEND_URL = import.meta.env.VITE_JUEZ_URL;
 
-// Configuración de Axios (compartida con apiProblem.js)
+// Axios configuration (shared with apiProblem.js)
 const api = axios.create({
   baseURL: BACKEND_URL,
   headers: {
@@ -10,7 +10,7 @@ const api = axios.create({
   },
 });
 
-// Interceptor para añadir el token (igual que en apiProblem.js)
+// Interceptor to add the token (same as in apiProblem.js)
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem("authToken");
   if (token) {
@@ -19,7 +19,7 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-// Obtener todos los test cases de un problema
+// Fetch all test cases of a problem
 export async function fetchTestCases(problemId) {
   try {
     const response = await api.get(`/api/problems/${problemId}/test-cases`);
@@ -27,12 +27,12 @@ export async function fetchTestCases(problemId) {
   } catch (error) {
     throw new Error(
       error.response?.data?.message ||
-        `Error al obtener test cases para el problema: ${problemId}`
+        `Error fetching test cases for problem: ${problemId}`
     );
   }
 }
 
-// Crear o actualizar test cases de un problema
+// Create or update test cases of a problem
 export async function saveTestCases(problemId, testCases) {
   try {
     const response = await api.post(
@@ -43,7 +43,7 @@ export async function saveTestCases(problemId, testCases) {
   } catch (error) {
     throw new Error(
       error.response?.data?.message ||
-        `Error al guardar test cases para el problema: ${problemId}`
+        `Error saving test cases for problem: ${problemId}`
     );
   }
 }

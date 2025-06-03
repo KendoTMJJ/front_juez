@@ -1,11 +1,11 @@
 const BACKEND_URL = import.meta.env.VITE_JUEZ_URL;
 
-// Función auxiliar para obtener el token de autenticación
+// Helper function to get the authentication token
 const getAuthToken = () => {
   return localStorage.getItem("authToken");
 };
 
-// Función auxiliar para crear headers con autenticación
+// Helper function to create headers with authentication
 const getAuthHeaders = () => {
   const token = getAuthToken();
   return {
@@ -14,16 +14,16 @@ const getAuthHeaders = () => {
   };
 };
 
-// mostrar todos los submissions
+// Show all submissions
 export async function fetchSubmissions(idUser) {
   const response = await fetch(`${BACKEND_URL}/api/submissions/all/${idUser}`);
   if (!response.ok) {
-    throw new Error("Problemas al obtener los datos");
+    throw new Error("Error fetching data");
   }
   return await response.json();
 }
 
-// Crear una nueva submission
+// Create a new submission
 export async function createSubmission(submissionData) {
   const response = await fetch(`${BACKEND_URL}/api/submissions/create`, {
     method: "POST",
@@ -32,13 +32,13 @@ export async function createSubmission(submissionData) {
   });
 
   if (!response.ok) {
-    throw new Error("Problemas al crear la submission");
+    throw new Error("Error creating submission");
   }
 
   return await response.json();
 }
 
-// Obtener todas las submissions, con filtros opcionales
+// Get all submissions, with optional filters
 export async function getAllSubmissions({ problemId, userId } = {}) {
   let url = `${BACKEND_URL}/api/submissions/all`;
 
@@ -55,13 +55,13 @@ export async function getAllSubmissions({ problemId, userId } = {}) {
   });
 
   if (!response.ok) {
-    throw new Error("Problemas al obtener las submissions");
+    throw new Error("Error fetching submissions");
   }
 
   return await response.json();
 }
 
-// Obtener una submission por ID
+// Get a submission by ID
 export async function getSubmissionById(submissionId) {
   const response = await fetch(
     `${BACKEND_URL}/api/submissions/findOne/${submissionId}`,
@@ -71,26 +71,26 @@ export async function getSubmissionById(submissionId) {
   );
 
   if (!response.ok) {
-    throw new Error(`Submission no encontrada con ID: ${submissionId}`);
+    throw new Error(`Submission not found with ID: ${submissionId}`);
   }
 
   return await response.json();
 }
 
-// Obtener submissions del usuario actual
+// Get submissions of the current user
 export async function getUserSubmissions() {
   const response = await fetch(`${BACKEND_URL}/api/submissions/user`, {
     headers: getAuthHeaders(),
   });
 
   if (!response.ok) {
-    throw new Error("Problemas al obtener las submissions del usuario");
+    throw new Error("Error fetching user's submissions");
   }
 
   return await response.json();
 }
 
-// Obtener submissions de un usuario específico (solo para admin y maestros)
+// Get submissions of a specific user (only for admin and teachers)
 export async function getUserSubmissionsById(userId) {
   const response = await fetch(
     `${BACKEND_URL}/api/submissions/user/${userId}`,
@@ -100,15 +100,13 @@ export async function getUserSubmissionsById(userId) {
   );
 
   if (!response.ok) {
-    throw new Error(
-      `Problemas al obtener las submissions del usuario con ID: ${userId}`
-    );
+    throw new Error(`Error fetching submissions of user with ID: ${userId}`);
   }
 
   return await response.json();
 }
 
-// Obtener submissions por problema
+// Get submissions by problem
 export async function getSubmissionsByProblem(problemId) {
   const response = await fetch(
     `${BACKEND_URL}/api/submissions/problem/${problemId}`,
@@ -119,14 +117,14 @@ export async function getSubmissionsByProblem(problemId) {
 
   if (!response.ok) {
     throw new Error(
-      `Problemas al obtener las submissions del problema con ID: ${problemId}`
+      `Error fetching submissions for problem with ID: ${problemId}`
     );
   }
 
   return await response.json();
 }
 
-// Obtener submissions por estado
+// Get submissions by status
 export async function getSubmissionsByStatus(status) {
   const response = await fetch(
     `${BACKEND_URL}/api/submissions/status/${status}`,
@@ -136,9 +134,7 @@ export async function getSubmissionsByStatus(status) {
   );
 
   if (!response.ok) {
-    throw new Error(
-      `Problemas al obtener las submissions con estado: ${status}`
-    );
+    throw new Error(`Error fetching submissions with status: ${status}`);
   }
 
   return await response.json();
