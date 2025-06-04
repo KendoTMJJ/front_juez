@@ -1,9 +1,9 @@
 const BACKEND_URL = import.meta.env.VITE_USERS_URL;
 
-// Función para registrar un nuevo usuario
+// Function to register a new user
 export async function registerUser(userData) {
   try {
-    console.log("Enviando datos al backend:", userData)
+    // console.log("Sending data to backend:", userData);
 
     const response = await fetch(`${BACKEND_URL}/registro/crear`, {
       method: "POST",
@@ -11,47 +11,52 @@ export async function registerUser(userData) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(userData),
-    })
+    });
 
-    console.log("Respuesta del servidor:", response.status)
+    // console.log("Server response:", response.status);
 
-    // Intenta obtener el cuerpo de la respuesta
+    // Try to get the response body
     const data = await response.json().catch((e) => {
-      console.error("Error al parsear la respuesta:", e)
-      return {}
-    })
+      console.error("Error parsing response:", e);
+      return {};
+    });
 
-    console.log("Datos recibidos:", data)
+    // console.log("Received data:", data);
 
-    // Verifica si hay un token en la respuesta o en el mensaje
+    // Check if there's a token in the response or message
     if (data.tokenApp) {
-      localStorage.setItem("authToken", data.tokenApp)
-      return { success: true, token: data.tokenApp }
+      localStorage.setItem("authToken", data.tokenApp);
+      return { success: true, token: data.tokenApp };
     }
-    // Verifica si la respuesta tiene una estructura anidada (HttpException)
-    else if (data.message && typeof data.message === "object" && data.message.tokenApp) {
-      localStorage.setItem("authToken", data.message.tokenApp)
-      return { success: true, token: data.message.tokenApp }
+    // Check if the response has a nested structure (HttpException)
+    else if (
+      data.message &&
+      typeof data.message === "object" &&
+      data.message.tokenApp
+    ) {
+      localStorage.setItem("authToken", data.message.tokenApp);
+      return { success: true, token: data.message.tokenApp };
     }
-    // Si no hay token pero la respuesta es 200, también es exitoso
+    // If there's no token but the response is 200, it's still successful
     else if (response.ok) {
-      return { success: true, data }
+      return { success: true, data };
     }
-    // De lo contrario, es un error
+    // Otherwise, it's an error
     else {
-      const errorMsg = data.message || `Error ${response.status}: ${response.statusText}`
-      throw new Error(errorMsg)
+      const errorMsg =
+        data.message || `Error ${response.status}: ${response.statusText}`;
+      throw new Error(errorMsg);
     }
   } catch (error) {
-    console.error("Error en registro:", error)
-    throw error
+    console.error("Registration error:", error);
+    throw error;
   }
 }
 
-// Función para iniciar sesión
+// Function to log in
 export async function loginUser(credentials) {
   try {
-    console.log("Enviando credenciales:", credentials)
+    // console.log("Sending credentials:", credentials);
 
     const response = await fetch(`${BACKEND_URL}/registro/login`, {
       method: "POST",
@@ -59,135 +64,136 @@ export async function loginUser(credentials) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(credentials),
-    })
+    });
 
-    console.log("Respuesta del servidor:", response.status)
+    // console.log("Server response:", response.status);
 
-    // Obtén el texto de la respuesta primero para depurar
-    const responseText = await response.text()
-    console.log("Respuesta como texto:", responseText)
+    // Get response text first for debugging
+    const responseText = await response.text();
+    // console.log("Response as text:", responseText);
 
-    // Si la respuesta está vacía, maneja el error
+    // If the response is empty, handle the error
     if (!responseText) {
-      throw new Error("Respuesta vacía del servidor")
+      throw new Error("Empty response from server");
     }
 
-    // Intenta parsear la respuesta como JSON
-    let data
+    // Try to parse the response as JSON
+    let data;
     try {
-      data = JSON.parse(responseText)
-      console.log("Datos parseados:", data)
+      data = JSON.parse(responseText);
+      // console.log("Parsed data:", data);
     } catch (e) {
-      console.error("Error al parsear JSON:", e)
-      throw new Error("Formato de respuesta inválido: no es JSON válido")
+      console.error("Error parsing JSON:", e);
+      throw new Error("Invalid response format: not valid JSON");
     }
 
-    // Examina la estructura de la respuesta para depuración
-    console.log("Estructura de data:", JSON.stringify(data, null, 2))
-    console.log("uuui de usuario:", JSON.stringify(data.user.codUser, null, 2))
-    localStorage.setItem("idUser", data.user.codUser)
+    // Debug the structure of the response
+    // console.log("Data structure:", JSON.stringify(data, null, 2))
+    // console.log("User ID:", JSON.stringify(data.user.codUser, null, 2))
+    localStorage.setItem("idUser", data.user.codUser);
 
-    // Estrategia 1: Buscar un token en cualquier nivel de la respuesta
-    function findTokenInObject(obj, tokenNames = ["accessToken", "tokenApp", "token"]) {
-      if (!obj || typeof obj !== "object") return null
+    // Strategy 1: Look for a token at any level of the response
+    function findTokenInObject(
+      obj,
+      tokenNames = ["accessToken", "tokenApp", "token"]
+    ) {
+      if (!obj || typeof obj !== "object") return null;
 
-      // Buscar directamente en el objeto
+      // Look directly in the object
       for (const name of tokenNames) {
-        if (obj[name]) return obj[name]
+        if (obj[name]) return obj[name];
       }
 
-      // Buscar en propiedades anidadas
+      // Look in nested properties
       for (const key in obj) {
         if (typeof obj[key] === "object") {
-          const token = findTokenInObject(obj[key], tokenNames)
-          if (token) return token
+          const token = findTokenInObject(obj[key], tokenNames);
+          if (token) return token;
         }
       }
 
-      return null
+      return null;
     }
 
-    const token = findTokenInObject(data)
+    const token = findTokenInObject(data);
 
     if (token) {
-      console.log("Token encontrado:", token)
-      localStorage.setItem("authToken", token)
+      // console.log("Token found:", token);
+      localStorage.setItem("authToken", token);
 
-      // Extraer y guardar la información del usuario
-      let userData = null
+      // Extract and store user information
+      let userData = null;
 
-      // Intentar encontrar el usuario en diferentes lugares de la respuesta
+      // Try to find user in different places in the response
       if (data.user) {
-        userData = data.user
+        userData = data.user;
       } else if (data.message && data.message.user) {
-        userData = data.message.user
+        userData = data.message.user;
       } else {
-        // Si no hay información de usuario en la respuesta, crear un objeto básico
+        // If there's no user info in the response, create a basic object
         userData = {
           username: credentials.username,
-        }
+        };
       }
 
-      // Guardar la información del usuario
-      localStorage.setItem("userData", JSON.stringify(userData))
+      // Save user information
+      localStorage.setItem("userData", JSON.stringify(userData));
 
       return {
         success: true,
         user: userData,
         token,
-      }
+      };
     }
 
-    // Si llegamos aquí, no se encontró un token
-    console.error("No se encontró un token en la respuesta:", data)
-    throw new Error("Formato de respuesta inválido: no se encontró un token")
+    // If we got here, no token was found
+    console.error("No token found in the response:", data);
+    throw new Error("Invalid response format: no token found");
   } catch (error) {
-    console.error("Error en login:", error)
-    throw error
+    console.error("Login error:", error);
+    throw error;
   }
 }
 
-// Función para verificar si el usuario está autenticado
+// Function to check if the user is authenticated
 export function isAuthenticated() {
-  const token = localStorage.getItem("authToken")
-  return !!token // Devuelve true si hay un token, false si no
+  const token = localStorage.getItem("authToken");
+  return !!token; // Returns true if there's a token, false otherwise
 }
 
-// Función para obtener el token
+// Function to get the token
 export function getAuthToken() {
-  return localStorage.getItem("authToken")
+  return localStorage.getItem("authToken");
 }
 
-// Función para cerrar sesión
+// Function to log out
 export function logout() {
-
   localStorage.clear();
   // localStorage.removeItem("authToken")
   // localStorage.removeItem("userData")
   // localStorage.removeItem("idUser")
-  window.location.href = "/"
+  window.location.href = "/";
 }
 
-// Función para obtener la información del usuario actual
+// Function to get the current user's information
 export function getCurrentUser() {
   try {
-    const userData = localStorage.getItem("userData")
-    return userData ? JSON.parse(userData) : null
+    const userData = localStorage.getItem("userData");
+    return userData ? JSON.parse(userData) : null;
   } catch (e) {
-    console.error("Error al obtener datos del usuario:", e)
-    return null
+    console.error("Error getting user data:", e);
+    return null;
   }
 }
 
-// Función para obtener el rol del usuario
+// Function to get the user's role
 export function getUserRole() {
-  const user = getCurrentUser()
-  return user?.rolUsuario?.name || "Usuario"
+  const user = getCurrentUser();
+  return user?.rolUsuario?.name || "User";
 }
 
-
-// Función para verificar si el usuario es administrador
+// Function to check if the user is an administrator
 export function isAdmin() {
   const role = getUserRole();
-  return role === "Administrador"; // Compara con el nombre exacto de tu JSON
+  return role === "Administrador"; // Match the exact name in your JSON
 }

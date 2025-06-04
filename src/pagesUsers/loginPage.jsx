@@ -25,11 +25,11 @@ const Login = () => {
 
     try {
       setLoading(true);
-      console.log("Enviando credenciales:", credentials);
+      // console.log("Enviando credenciales:", credentials);
 
       const result = await loginUser(credentials);
 
-      console.log("Resultado del login:", result);
+      // console.log("Resultado del login:", result);
 
       if (result.success) {
         // Login successful, redirect to home page
