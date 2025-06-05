@@ -118,3 +118,28 @@ export async function deleteUser(userId) {
 
   return await response.json();
 }
+
+// Update user role 
+export async function updateUserRole(userId, newRole) {
+  console.log("Sending role update request:", { userId, newRole })
+
+  const requestBody = {
+    codRole: newRole, // Matches exactly with your DB and DTO
+  }
+
+  const response = await fetch(`${BACKEND_URL}/users/${userId}`, {
+    method: "PATCH",
+    headers: getAuthHeaders(),
+    body: JSON.stringify(requestBody),
+  })
+
+  if (!response.ok) {
+    const errorText = await response.text()
+    //console.error("Error response:", errorText)
+    throw new Error(`Error ${response.status}: ${response.statusText} - ${errorText}`)
+  }
+
+  const result = await response.json()
+  //console.log("Success response:", result)
+  return result
+}

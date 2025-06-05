@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { getAdminStats, getAllUsers, activateUser, deactivateUser, deleteUser, } from "../services/apiAdmin"
+import { getAdminStats, getAllUsers, activateUser, deactivateUser, deleteUser, updateUserRole, } from "../services/apiAdmin"
 
 function AdminPage() {
   const isAuthenticated = !!localStorage.getItem("authToken")
@@ -25,17 +25,27 @@ function AdminPage() {
   const [error, setError] = useState(null)
   const [usersError, setUsersError] = useState(null)
 
-   // Function to get role color based on role name
+  // State for role changes
+  const [roleChangeLoading, setRoleChangeLoading] = useState({})
+
+  // Role mappings based on your database 
+  const ROLES = {
+    1: { name: "Administrador", color: "bg-purple-100 text-purple-800" },
+    2: { name: "Maestro", color: "bg-orange-100 text-orange-800" },
+    3: { name: "Estudiante", color: "bg-blue-100 text-blue-800" },
+  }
+
+  // Function to get role color based on role name 
   const getRoleColor = (roleName) => {
     if (!roleName) return "bg-gray-100 text-gray-800"
 
     const name = roleName.toLowerCase()
-    if (name.includes("admin")) {
+    if (name.includes("administrador")) {
       return "bg-purple-100 text-purple-800"
-    } else if (name.includes("profesor")) {
+    } else if (name.includes("maestro")) {
+      return "bg-orange-100 text-orange-800"
+    } else if (name.includes("estudiante")) {
       return "bg-blue-100 text-blue-800"
-    } else if (name.includes("user")) {
-      return "bg-green-100 text-green-800"
     } else {
       return "bg-gray-100 text-gray-800"
     }
@@ -46,8 +56,6 @@ function AdminPage() {
     if (!roleName) return "Usuario"
     return roleName.charAt(0).toUpperCase() + roleName.slice(1)
   }
-
-
 
   // Function to load statistics from the API
   useEffect(() => {
@@ -146,6 +154,26 @@ function AdminPage() {
         console.error("Error deleting user:", err)
         alert("Error deleting user")
       }
+    }
+  }
+
+  // Handle role change
+  const handleRoleChange = async (userId, newRole) => {
+    try {
+      console.log("Attempting to change role for user:", userId, "to role:", newRole)
+
+      setRoleChangeLoading((prev) => ({ ...prev, [userId]: true }))
+
+      const result = await updateUserRole(userId, Number.parseInt(newRole))
+      console.log("Role change result:", result)
+
+      fetchUsers() // Refresh users list
+      alert("Role updated successfully!")
+    } catch (err) {
+      console.error("Error updating user role:", err)
+      alert(`Error updating user role: ${err.message}`)
+    } finally {
+      setRoleChangeLoading((prev) => ({ ...prev, [userId]: false }))
     }
   }
 
@@ -301,9 +329,7 @@ function AdminPage() {
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Problems
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Date
-                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Actions
                 </th>
@@ -335,9 +361,10 @@ function AdminPage() {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span
-                        className={`px-3 py-1 text-xs font-semibold rounded-full ${getRoleColor(user.rolUsuario?.name)}`}
+                        className={`px-3 py-1 text-xs font-semibold rounded-full ${ROLES[user.codRole]?.color || getRoleColor(user.rolUsuario?.name)
+                          }`}
                       >
-                        {formatRoleName(user.rolUsuario?.name)}
+                        {ROLES[user.codRole]?.name || formatRoleName(user.rolUsuario?.name)}
                       </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
@@ -352,22 +379,58 @@ function AdminPage() {
                       {user.totalProblemsSolved || 0}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{formatDate(user.createdAt)}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
-                      <button
-                        onClick={() => handleStatusToggle(user.codUser, user.isActive)}
-                        className={`px-3 py-1 rounded text-xs ${user.isActive
-                          ? "bg-red-100 text-red-700 hover:bg-red-200"
-                          : "bg-green-100 text-green-700 hover:bg-green-200"
-                          }`}
-                      >
-                        {user.isActive ? "Deactivate" : "Activate"}
-                      </button>
-                      <button
-                        onClick={() => handleDeleteUser(user.codUser)}
-                        className="px-3 py-1 bg-red-100 text-red-700 hover:bg-red-200 rounded text-xs"
-                      >
-                        Remove
-                      </button>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                      <div className="flex flex-col space-y-2">
+                        {/* Role Change Button */}
+                        <div className="flex items-center space-x-2">
+                          <select
+                            onChange={(e) => {
+                              if (e.target.value && e.target.value !== user.codRole.toString()) {
+                                handleRoleChange(user.codUser, e.target.value)
+                                e.target.value = "" // Reset dropdown
+                              }
+                            }}
+                            disabled={roleChangeLoading[user.codUser]}
+                            className="text-xs border border-gray-300 rounded px-2 py-1 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-100"
+                            defaultValue=""
+                          >
+                            <option value="">🔄 Change role</option>
+                            {Object.entries(ROLES).map(
+                              ([roleId, role]) =>
+                                Number.parseInt(roleId) !== user.codRole && (
+                                  <option key={roleId} value={roleId}>
+                                    {role.name}
+                                  </option>
+                                ),
+                            )}
+                          </select>
+                          {roleChangeLoading[user.codUser] && (
+                            <div className="flex items-center text-xs text-blue-600">
+                              <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-blue-600 mr-1"></div>
+                              Updating...
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Action Buttons */}
+                        <div className="flex space-x-2">
+                          <button
+                            onClick={() => handleStatusToggle(user.codUser, user.isActive)}
+                            className={`px-3 py-1 rounded text-xs font-medium transition-colors ${user.isActive
+                                ? "bg-yellow-100 text-yellow-700 hover:bg-yellow-200 border border-yellow-300"
+                                : "bg-green-100 text-green-700 hover:bg-green-200 border border-green-300"
+                              }`}
+                          >
+                            {user.isActive ? "⏸️ Deactivate" : "▶️ Activate"}
+                          </button>
+                          <button
+                            onClick={() => handleDeleteUser(user.codUser)}
+                            className="px-3 py-1 bg-red-100 text-red-700 hover:bg-red-200 rounded text-xs font-medium border border-red-300 transition-colors"
+                          >
+                            🗑️ Remove
+                          </button>
+                        </div>
+                      </div>
                     </td>
                   </tr>
                 ))
