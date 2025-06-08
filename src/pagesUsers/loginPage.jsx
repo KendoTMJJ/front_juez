@@ -1,9 +1,12 @@
 import { useState } from "react";
 import { loginUser } from "../servicesUsuarios/authService";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 const Login = () => {
   const navigate = useNavigate();
+  const { login } = useAuth(); // 👈 Nuevo
+
   const [credentials, setCredentials] = useState({
     username: "",
     password: "",
@@ -25,14 +28,14 @@ const Login = () => {
 
     try {
       setLoading(true);
-      // console.log("Enviando credenciales:", credentials);
 
       const result = await loginUser(credentials);
 
-      // console.log("Resultado del login:", result);
-
       if (result.success) {
-        // Login successful, redirect to home page
+        // 👉 Actualiza el contexto global de auth
+        login(result.user, result.token);
+
+        // Redirige a la página principal
         navigate("/");
       }
     } catch (err) {

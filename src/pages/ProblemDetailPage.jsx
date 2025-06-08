@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { deleteProblem, findProbleById } from "../services/apiProblem";
-import { isAdmin } from "../servicesUsuarios/authService";
+import { isAdmin, isMaster } from "../servicesUsuarios/authService";
 
 function ProblemDetailPage() {
   const { id } = useParams();
@@ -24,26 +24,20 @@ function ProblemDetailPage() {
       setError(null);
     } catch (err) {
       console.error("Error fetching problem:", err);
-      setError(
-        "Error loading problem. Please try again later."
-      );
+      setError("Error loading problem. Please try again later.");
     } finally {
       setLoading(false);
     }
   };
 
   const handleDelete = async () => {
-    if (
-      window.confirm("Are you sure you want to delete this problem?")
-    ) {
+    if (window.confirm("Are you sure you want to delete this problem?")) {
       try {
         await deleteProblem(id);
         navigate("/problems");
       } catch (err) {
         console.error("Error deleting problem:", err);
-        alert(
-          "Error while deleting the problem. Please try again later."
-        );
+        alert("Error while deleting the problem. Please try again later.");
       }
     }
   };
@@ -78,7 +72,7 @@ function ProblemDetailPage() {
         <div className="flex justify-between items-center mb-4">
           <h1 className="text-2xl font-bold text-gray-900">{problem.title}</h1>
 
-          {isAuthenticated && isAdmin() && (
+          {isAuthenticated && (isAdmin() || isMaster()) && (
             <div className="flex space-x-2">
               <Link
                 to={`/problems/edit/${id}`}
@@ -102,8 +96,8 @@ function ProblemDetailPage() {
               problem.difficulty === "easy"
                 ? "bg-green-100 text-green-800"
                 : problem.difficulty === "medium"
-                ? "bg-yellow-100 text-yellow-800"
-                : "bg-red-100 text-red-800"
+                  ? "bg-yellow-100 text-yellow-800"
+                  : "bg-red-100 text-red-800"
             }`}
           >
             {problem.difficulty}

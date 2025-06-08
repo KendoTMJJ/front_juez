@@ -176,13 +176,15 @@ export function Navbar() {
             {isAuthenticated ? (
               <>
                 {/* Admin button on mobile - Visible for all authenticated users */}
-                <Link
-                  to="/admin"
-                  className="block pl-3 pr-4 py-2 border-l-4 border-red-500 text-base font-medium text-red-600 bg-red-50 hover:bg-red-100 hover:text-red-700"
-                  onClick={toggleMenu}
-                >
-                  Admin Panel
-                </Link>
+                {isAdmin() && (
+                  <Link
+                    to="/admin"
+                    className="block pl-3 pr-4 py-2 border-l-4 border-red-500 text-base font-medium text-red-600 bg-red-50 hover:bg-red-100 hover:text-red-700"
+                    onClick={toggleMenu}
+                  >
+                    Admin Panel
+                  </Link>
+                )}
 
                 <Link
                   to="/profile"

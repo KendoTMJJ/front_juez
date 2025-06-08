@@ -79,33 +79,32 @@ export async function updateUserSolvedProblems(userId, problemId) {
 
 export async function getCombinedRankings(limit = 10) {
   try {
-    // 1. Obtener usuarios con más problemas resueltos
-    const usersResponse = await fetch(`${BACKEND_URL}/users/list`, {
+    // 1. Get users with the most problems solved
+    const usersResponse = await fetch(`${BACKEND_URL}/acceso/list`, {
       method: "GET",
-      headers: getAuthHeaders(),
+      headers: { "Content-Type": "application/json" },
     });
 
-    if (!usersResponse.ok) throw new Error("Error al obtener usuarios");
+    if (!usersResponse.ok) throw new Error("Error fetching users");
     const allUsers = await usersResponse.json();
 
-    // Ordenar usuarios por problemas resueltos (descendente)
     const sortedUsers = [...allUsers]
       .sort((a, b) => b.totalProblemsSolved - a.totalProblemsSolved)
       .slice(0, limit);
 
-    // 2. Obtener puntuaciones del juez para estos usuarios
+    // 2. Get judge scores for these users
     const scoresResponse = await fetch(`${Juez_URL}/api/submissions/scores`, {
       method: "POST",
-      headers: getAuthHeaders(),
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         userIds: sortedUsers.map((user) => user.codUser),
       }),
     });
 
-    if (!scoresResponse.ok) throw new Error("Error al obtener puntuaciones");
+    if (!scoresResponse.ok) throw new Error("Error fetching scores");
     const scores = await scoresResponse.json();
 
-    // 3. Combinar datos
+    // 3. Combine data
     return sortedUsers
       .map((user) => ({
         id: user.codUser,

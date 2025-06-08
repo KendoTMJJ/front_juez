@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { Link } from "react-router-dom";
 import { fetchProblems } from "../services/apiProblem";
-import { isAdmin } from "../servicesUsuarios/authService";
+import { isAdmin, isMaster } from "../servicesUsuarios/authService";
 
 function ProblemListPage() {
   const [problems, setProblems] = useState([]);
@@ -29,7 +29,7 @@ function ProblemListPage() {
     <div className="max-w-7xl mx-auto p-6 space-y-6">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold text-gray-900">Problems</h1>
-        {isAuthenticated && isAdmin() && (
+        {isAuthenticated && (isAdmin() || isMaster()) && (
           <Link
             to="/problems/create"
             className="bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium py-2 px-4 rounded"
@@ -79,8 +79,8 @@ function ProblemListPage() {
                         problem.difficulty === "easy"
                           ? "bg-green-100 text-green-800"
                           : problem.difficulty === "medium"
-                          ? "bg-yellow-100 text-yellow-800"
-                          : "bg-red-100 text-red-800"
+                            ? "bg-yellow-100 text-yellow-800"
+                            : "bg-red-100 text-red-800"
                       }`}
                     >
                       {problem.difficulty}
@@ -117,7 +117,7 @@ function ProblemListPage() {
                         </Link>
                       )}
 
-                      {isAuthenticated && isAdmin() && (
+                      {isAuthenticated && (isAdmin() || isMaster()) && (
                         <Link
                           to={`/problems/edit/${problem.codProblem}`}
                           className="text-gray-600 hover:text-gray-900"

@@ -197,3 +197,9 @@ export function isAdmin() {
   const role = getUserRole();
   return role === "Administrador"; // Match the exact name in your JSON
 }
+
+// Function to check if the user is an master
+export function isMaster() {
+  const role = getUserRole();
+  return role === "Maestro"; // Match the exact name in your JSON
+}
