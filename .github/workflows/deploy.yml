@@ -13,7 +13,12 @@ jobs:
       - name: Checkout código fuente
         uses: actions/checkout@v4
 
-      - name: Instalar dependencias y construir frontend
+      - name: Instalar dependencias
+        run: |
+          npm install
+          npm install vite --save-dev
+
+      - name: Construir frontend
         run: npm run build
 
       - name: Subir archivos al servidor (Azure VM)
