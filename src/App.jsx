@@ -12,11 +12,12 @@ import RankingsPage from "./pages/RankingsPage";
 import Login from "./pagesUsers/loginPage";
 import Register from "./pagesUsers/registerPage";
 import ProfilePage from "./pagesUsers/profilePage";
-import AdminPage from "./pagesUsers/adminPage";
 import Footer from "./components/Footer";
 import EditProfilePage from "./pagesUsers/EditProfilePage";
 import ProtectedRoute from "./components/ProtectedRoute";
 import ProtectedRouteHome from "./components/ProtectedRouteHome";
+import AdminPage from "./pagesUsers/AdminPage";
+
 import { useAuth } from "./context/AuthContext";
 import { isAdmin, isMaster } from "./servicesUsuarios/authService";
 
