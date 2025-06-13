@@ -27,7 +27,7 @@ jobs:
           host: ${{ secrets.AZURE_VM_IP }}
           username: ${{ secrets.AZURE_VM_USER }}
           key: ${{ secrets.AZURE_SSH_KEY }}
-          source: "build/"
+          source: "dist/"
           target: "/var/www/FrontProyecto/"
 
       - name: Reiniciar Nginx
