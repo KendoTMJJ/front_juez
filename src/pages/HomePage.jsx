@@ -17,7 +17,7 @@ function HomePage() {
       {/* Hero Section */}
       <div className="text-center mb-16">
         <h1 className="text-5xl font-bold text-gray-900 mb-6">
-          Hola to <span className="text-blue-600">Juez</span>
+          Welcome to <span className="text-blue-600">Juez</span>
           <span className=" text-black">Virtual</span>{" "}
           {username && <span className="text-black">{username}</span>}
         </h1>
