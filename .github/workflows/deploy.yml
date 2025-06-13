@@ -21,23 +21,6 @@ jobs:
       - name: Construir frontend
         run: npm run build
 
-      - name: Verificar secrets
-        run: |
-          echo "Verificando configuración SSH..."
-          if [ -z "${{ secrets.AZURE_VM_IP }}" ]; then
-            echo "❌ Error: AZURE_VM_IP no está configurado"
-            exit 1
-          fi
-          if [ -z "${{ secrets.AZURE_VM_USER }}" ]; then
-            echo "❌ Error: AZURE_VM_USER no está configurado"
-            exit 1
-          fi
-          if [ -z "${{ secrets.AZURE_SSH_KEY }}" ]; then
-            echo "❌ Error: AZURE_SSH_KEY no está configurado"
-            exit 1
-          fi
-          echo "✔ Todos los secrets están presentes"
-
       - name: Subir archivos al servidor (Azure VM)
         uses: appleboy/scp-action@v0.1.7
         with:
