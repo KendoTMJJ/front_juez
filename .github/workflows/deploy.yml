@@ -21,6 +21,9 @@ jobs:
       - name: Construir frontend
         run: npm run build
 
+      - name: Debug SSH Key
+        run: echo "${{ secrets.AZURE_SSH_KEY }}" | wc -c
+
       - name: Subir archivos al servidor (Azure VM)
         uses: appleboy/scp-action@v0.1.7
         with:
