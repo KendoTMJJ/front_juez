@@ -21,6 +21,12 @@ jobs:
       - name: Construir frontend
         run: npm run build
 
+      - name: Debug ip
+        run: echo "${{ secrets.AZURE_VM_IP }}"
+
+      - name: Debug user
+        run: echo "${{ secrets.AZURE_VM_USER }}"
+
       - name: Debug SSH Key
         run: echo "${{ secrets.AZURE_SSH_KEY }}" | wc -c
 
